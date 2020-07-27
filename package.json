@@ -1,0 +1,35 @@
+{
+  "name": "game_engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "parcel serve ./examples/index.html --port 8888",
+    "build": "parcel build ./src/index.js --dist-dir ./build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "normalize.css": "^8.0.1",
+    "preact": "^10.4.6",
+    "preact-router": "^3.2.1",
+    "shortid": "^2.2.15",
+    "transformation-matrix": "^2.4.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.1",
+    "postcss-modules": "^3.2.0"
+  },
+  "alias": {
+    "react": "preact/compat",
+    "react-dom/test-utils": "preact/test-utils",
+    "react-dom": "preact/compat",
+    "game_engine": "./src"
+  }
+}

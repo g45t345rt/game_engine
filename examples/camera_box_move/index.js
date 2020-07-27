@@ -1,0 +1,20 @@
+import * as React from 'preact'
+import { Component } from 'preact/compat'
+
+import Game from './game'
+import { ClientEngine } from 'game_engine'
+
+export default class Index extends Component {
+  componentDidMount = () => {
+    const canvas = this.canvas
+    const game = new Game(canvas)
+    new ClientEngine({ canvas, game, fps: 60, domRootId: 'editor' })
+  }
+
+  render = () => {
+    return <div>
+      <div id="editor"></div>
+      <canvas ref={(node) => (this.canvas = node)} />
+    </div>
+  }
+}

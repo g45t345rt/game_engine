@@ -1,0 +1,19 @@
+GAME ENGINE
+☐ Fix parent transform property assign
+☐ Change Box component to work with new Transform component
+☐ Network component (server & client loop sync) oooff big one
+✔ Use parcel to bundle code @done(20-07-26 22:54)
+✔ Use preact for game ui editor @done(20-07-26 22:53)
+✔ Seprate gameLoop with engine class & client_engine @done(20-07-26 22:53)
+✔ don't use DOMMatrix or any other browser api because I need the game_engine too work in nodejs @done(20-07-24 21:02)
+✔ Keyboard & mouse register component @done(20-07-24 21:34)
+✔ Simple fps render loop display (as a component) @done(20-07-24 21:34)
+✔ Create Transform, Camera component @done(20-07-24 21:34)
+✔ Divide component class into gameobject or component @done(20-07-24 21:02)
+✔ Tree select for all components of root game (direct access instead of going down every components) @done(20-07-16 22:38)
+✔ Fix x,y,clipX,clipY in camera to viewport structure @done(20-07-14 17:59)
+✔ Collapsable tab for dynamic ui input @done(20-07-14 17:08)
+✔ UI dynamic game object manipulation @done(20-07-14 12:16)
+✔ GameObject (matrix, boudingbox, collision & limit detection) @done(20-07-13 08:51)
+✔ Camera (follow or lock, clip, multiple views) @done(20-07-13 08:51)
+✔ GameComponent (render & update with recursive multiple pattern) @done(20-07-13 08:53)

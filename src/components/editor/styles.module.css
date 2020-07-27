@@ -1,0 +1,54 @@
+.ui {
+  position: absolute;
+  right: 0;
+  max-height: 500px;
+  overflow: auto;
+  width: 300px;
+}
+
+.tab {
+  padding: 10px;
+  color: white;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #2f2f2f;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hide {
+  display: none !important;
+}
+
+.properties {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #383838;
+}
+
+.properties > * {
+  margin-bottom: 10px;
+}
+
+.properties > *:last-child {
+  margin-bottom: 0;
+}
+
+.properties > span {
+  padding: 5px;
+  border-radius: 2px;
+  background-color: #464646;
+  color: #b5b5b5;
+}
+
+.properties > label {
+  color: white;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
