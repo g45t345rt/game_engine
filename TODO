@@ -1,5 +1,7 @@
 GAME ENGINE
-☐ Fix parent transform property assign
+☐ Add numbers to grid and infite layer while moving camera (now it's static with the camera)
+✔ Create new grid component @done(20-07-27 22:10)
+✔ Fix parent transform property assign @done(20-07-27 22:10)
 ☐ Change Box component to work with new Transform component
 ☐ Network component (server & client loop sync) oooff big one
 ✔ Use parcel to bundle code @done(20-07-26 22:54)

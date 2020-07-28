@@ -1,6 +1,6 @@
 ### Game engine
 
-Simple hierarchy based component system in javascript.
+Simple tree based component system in javascript.
 Works in the browser and nodejs.
 
 ##### Start developing by using

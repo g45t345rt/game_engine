@@ -19,9 +19,10 @@ export default class Player extends GameObject {
     const transform = this.getComponent(Transform)
 
     ctx.save()
-    ctx.setTransform(transform.matrix)
-    ctx.strokeStyle = 'green'
-    ctx.strokeRect(0, 0, 50, 50)
+    const { a, b, c, d, e, f } = transform.matrix
+    ctx.transform(a, b, c, d, e, f)
+    ctx.fillStyle = 'green'
+    ctx.fillRect(0, 0, 50, 50)
     ctx.restore()
   }
 }

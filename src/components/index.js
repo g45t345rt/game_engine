@@ -5,6 +5,7 @@ import FpsCounter from './fpsCounter'
 import Transform from './transform'
 import Keyboard from './keyboard'
 import Editor from './editor'
+import Grid from './grid'
 
 export default {
   Camera,
@@ -13,5 +14,6 @@ export default {
   FpsCounter,
   Transform,
   Keyboard,
-  Editor
+  Editor,
+  Grid
 }
