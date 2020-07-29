@@ -13,10 +13,10 @@ export default class FpsCounter extends GameComponent {
   }
 
   editorRender = () => {
-    return [
-      <label>fps</label>,
-      <span>{this.fps}</span>,
-    ]
+    return <React.Fragment>
+      <label>fps</label>
+      <span>{this.fps}</span>
+    </React.Fragment>
   }
 
   update () {
@@ -30,11 +30,19 @@ export default class FpsCounter extends GameComponent {
     }
   }
 
+  drawTextWithBackground (ctx, text) {
+
+  }
+
   render ({ ctx, deltaTime }) {
     this.deltaTime = deltaTime
     ctx.save()
-    ctx.font = '18px sans-serif'
+    ctx.font = '20px sans-serif'
     ctx.textBaseline = 'top'
+    ctx.fillStyle = 'black'
+    const width = ctx.measureText(this.fps).width
+    ctx.fillRect(0, 0, width, parseInt(ctx.font, 10))
+    ctx.fillStyle = 'white'
     ctx.fillText(this.fps, 0, 0)
     ctx.restore()
   }

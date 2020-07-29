@@ -1,8 +1,13 @@
 import * as React from 'preact'
+import PropTypes from 'prop-types'
 import { Component } from 'preact/compat'
 import styles from './styles.module.css'
 
 export default class TabObject extends Component {
+  static propTypes = {
+    onTabClick: PropTypes.func
+  }
+
   handleTabClick = (e) => {
     const { onTabClick } = this.props
     if (e.target instanceof HTMLInputElement) return

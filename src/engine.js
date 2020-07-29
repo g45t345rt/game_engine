@@ -1,17 +1,15 @@
-export default class ServerEngine {
-  constructor ({ game, fps }) {
-    this.game = game
-    this.loopSyncTime = 1000 / fps
-    this.nextUpdateTime = 0
-    this.lastTimestamp = 0
+const engine = ({ game, fps }) => {
+  const loopSyncTime = 1000 / fps
+  let nextUpdateTime = 0
 
-    this.update()
-  }
-
-  update () {
+  const update = () => {
     const updateStartTime = (new Date()).getTime()
-    this.game.__update()
-    this.nextUpdateTime = updateStartTime + this.loopSyncTime
-    setTimeout(this.update.bind(this), this.nextUpdateTime - (new Date()).getTime())
+    game.__update()
+    nextUpdateTime = updateStartTime + loopSyncTime
+    setTimeout(update, nextUpdateTime - (new Date()).getTime())
   }
+
+  update()
 }
+
+export default engine

@@ -1,4 +1,5 @@
 import * as React from 'preact'
+import PropTypes from 'prop-types'
 import { Component } from 'preact/compat'
 
 import TabObject from './TabObject'
@@ -33,6 +34,10 @@ const findGameObjectDeep = (gameObject, findId) => {
 }
 
 export default class GameObjectEditor extends Component {
+  static propTypes = {
+    gameObject: PropTypes.object.isRequired
+  }
+
   constructor (props) {
     super(props)
 
@@ -43,7 +48,6 @@ export default class GameObjectEditor extends Component {
       currentTab: 'gameobject'
     }
   }
-
 
   setTab = (key) => {
     const { currentTab } = this.state
@@ -97,24 +101,26 @@ export default class GameObjectEditor extends Component {
         <label>Tag</label>
         <input type="text" value={tag || ''} onChange={(e) => (currentObj.tag = e.target.value)} />
       </div>}
-      {components.map((component) => <ComponentEditor component={component} currentTab={currentTab} onTabClick={() => (this.setTab(component.name))} />)}
+      {components.map((component) => <ComponentEditor key={component.name} component={component} currentTab={currentTab} onTabClick={() => (this.setTab(component.name))} />)}
     </div>
   }
 }
 
 // Need this for later
-{/*<label>Origin</label>
-          <select value={Object.values(Origin)[[this.obj.ox, this.obj.oy]]} onChange={(e) => {
-            const { value } = e.target
-            this.obj.setOrigin(Origin[value])
-          }}>
-            {Object.keys(Origin).map((key) => {
-              return <option key={key} value={key}>{key}</option>
-            })}
-          </select>
-          <label>ox</label>
-          <input type="number" value={ox} onChange={(e) => (this.obj.ox = e.target.value)} />
-          <label>oy</label>
-          <input type="number" value={oy} onChange={(e) => (this.obj.oy = e.target.value)} />
-          <label>Origin POINT</label>
-          <span>{JSON.stringify(this.obj.getOriginPoint())}</span>*/}
+/*
+  <label>Origin</label>
+  <select value={Object.values(Origin)[[this.obj.ox, this.obj.oy]]} onChange={(e) => {
+    const { value } = e.target
+    this.obj.setOrigin(Origin[value])
+  }}>
+    {Object.keys(Origin).map((key) => {
+      return <option key={key} value={key}>{key}</option>
+    })}
+  </select>
+  <label>ox</label>
+  <input type="number" value={ox} onChange={(e) => (this.obj.ox = e.target.value)} />
+  <label>oy</label>
+  <input type="number" value={oy} onChange={(e) => (this.obj.oy = e.target.value)} />
+  <label>Origin POINT</label>
+  <span>{JSON.stringify(this.obj.getOriginPoint())}</span>
+*/

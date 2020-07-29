@@ -17,16 +17,16 @@ export default class Grid extends GameComponent {
 
   render ({ ctx }) {
     const transform = this.gameObject.getComponent(Transform)
-    const { x, y } = transform
     const xLines = this.width / this.spaceWidth
     const yLines = this.height / this.spaceHeight
 
     ctx.save()
     transform.apply(ctx)
     ctx.strokeStyle = 'black'
+    ctx.globalAlpha = 0.3
 
     // horizontal
-    for (var i = 0; i <= xLines; i++) {
+    for (let i = 0; i <= xLines; i++) {
       const line = i * this.spaceHeight
       ctx.beginPath()
       ctx.moveTo(0, line)
@@ -35,7 +35,7 @@ export default class Grid extends GameComponent {
     }
 
     // vertical
-    for (var i = 0; i <= yLines; i++) {
+    for (let i = 0; i <= yLines; i++) {
       const line = i * this.spaceWidth
       ctx.beginPath()
       ctx.moveTo(line, 0)

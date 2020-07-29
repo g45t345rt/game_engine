@@ -1,10 +1,13 @@
 GAME ENGINE
+☐ Implement sort order to customize rendering of components and gameobjects
+☐ Network component (server & client loop sync) oooff big one!!!
+✔ Fps counter should be more visible (black background & white text) @done(20-07-28 21:59)
+✔ Client engine and Engine class should be functions @done(20-07-28 21:51)
+✔ Fix origin matrix in Box component @done(20-07-28 21:43)
+✔ Configure eslint @done(20-07-28 21:13)
 ✔ Added local position, rotation & scale in Transform (relative to parent Transform) @done(20-07-28 20:30)
-☐ Add numbers to grid and infite layer while moving camera (now it's static with the camera)
 ✔ Create new grid component @done(20-07-27 22:10)
 ✔ Fix parent transform property assign @done(20-07-27 22:10)
-☐ Change Box component to work with new Transform component
-☐ Network component (server & client loop sync) oooff big one
 ✔ Use parcel to bundle code @done(20-07-26 22:54)
 ✔ Use preact for game ui editor @done(20-07-26 22:53)
 ✔ Seprate gameLoop with engine class & client_engine @done(20-07-26 22:53)

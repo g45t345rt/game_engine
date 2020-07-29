@@ -4,7 +4,7 @@ import MainCamera from './mainCamera'
 import Player from './player'
 import Map from './map'
 
-const { FpsCounter, Editor, Grid } = Components
+const { FpsCounter, Editor } = Components
 
 export default class Game extends GameObject {
   constructor (canvas) {
@@ -17,7 +17,6 @@ export default class Game extends GameObject {
 
     this.addComponent(FpsCounter)
     this.addComponent(Editor)
-    
 
     const mainCamera = this.spawn(MainCamera)
     mainCamera.spawn(Map, { w: 500, h: 500 })
