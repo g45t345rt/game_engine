@@ -74,7 +74,7 @@ export default class GameObjectEditor extends Component {
           {renderOption(root)}
         </select>
       </div>
-      <TabObject name={currentObj.id} obj={currentObj} onTabClick={() => (this.setTab('gameobject'))} />
+      <TabObject name={currentObj.displayName()} obj={currentObj} onTabClick={() => (this.setTab('gameobject'))} />
       {currentTab === 'gameobject' && <div key={id} className={styles.properties}>
         {parent && <input type="button" onClick={() => (this.setState({ currentObj: parent }))} value="Go to parent" />}
         {gameObjects.length > 0 && <React.Fragment>

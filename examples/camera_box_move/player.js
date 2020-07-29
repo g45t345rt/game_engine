@@ -19,8 +19,7 @@ export default class Player extends GameObject {
     const transform = this.getComponent(Transform)
 
     ctx.save()
-    const { a, b, c, d, e, f } = transform.matrix
-    ctx.transform(a, b, c, d, e, f)
+    transform.apply(ctx)
     ctx.fillStyle = 'green'
     ctx.fillRect(0, 0, 50, 50)
     ctx.restore()

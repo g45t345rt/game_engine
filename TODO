@@ -1,4 +1,5 @@
 GAME ENGINE
+✔ Added local position, rotation & scale in Transform (relative to parent Transform) @done(20-07-28 20:30)
 ☐ Add numbers to grid and infite layer while moving camera (now it's static with the camera)
 ✔ Create new grid component @done(20-07-27 22:10)
 ✔ Fix parent transform property assign @done(20-07-27 22:10)

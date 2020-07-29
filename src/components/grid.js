@@ -1,40 +1,45 @@
 import GameComponent from '../gameComponent'
 import Transform from './transform'
-import Camera from './camera'
 
 export default class Grid extends GameComponent {
-  constructor () {
+  constructor ({ w, h, sw, sh }) {
     super('grid')
+
+    this.width = w
+    this.height = h
+    this.spaceWidth = sw || 10
+    this.spaceHeight = sh || 10
   }
 
   onAdd = () => {
-    this.gameObject.requiredComponent(Camera)
+    this.gameObject.requiredComponent(Transform)
   }
 
   render ({ ctx }) {
-    const camera = this.gameObject.getComponent(Camera)
-
-    const spaceUnit = 20
-    const xLines = camera.viewH / spaceUnit
-    const yLines = camera.viewW / spaceUnit
+    const transform = this.gameObject.getComponent(Transform)
+    const { x, y } = transform
+    const xLines = this.width / this.spaceWidth
+    const yLines = this.height / this.spaceHeight
 
     ctx.save()
-    ctx.translate(camera.viewX, camera.viewY)
+    transform.apply(ctx)
     ctx.strokeStyle = 'black'
 
+    // horizontal
     for (var i = 0; i <= xLines; i++) {
-      const line = i * spaceUnit
+      const line = i * this.spaceHeight
       ctx.beginPath()
       ctx.moveTo(0, line)
-      ctx.lineTo(camera.viewW, line)
+      ctx.lineTo(this.width, line)
       ctx.stroke()
     }
 
+    // vertical
     for (var i = 0; i <= yLines; i++) {
-      const line = i * spaceUnit
+      const line = i * this.spaceWidth
       ctx.beginPath()
       ctx.moveTo(line, 0)
-      ctx.lineTo(line, camera.viewH)
+      ctx.lineTo(line, this.height)
       ctx.stroke()
     }
 

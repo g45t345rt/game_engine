@@ -14,11 +14,6 @@ export default class Camera extends GameComponent {
     this.viewOriginY = voy || 0.5
   }
 
-  update () {
-    const transform = this.gameObject.getComponent(Transform)
-    transform.translate(this.viewX, this.viewY)
-  }
-
   editorRender = () => {
     return <React.Fragment>
       <label>ViewX</label>
@@ -50,6 +45,7 @@ export default class Camera extends GameComponent {
     ctx.clip()
 
     this.drawViewBorder(ctx)
+    ctx.translate(this.viewX, this.viewY)
   }
 
   worldPoint = (x, y) => {

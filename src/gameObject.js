@@ -54,7 +54,7 @@ export default class GameObject {
 
   spawn (ObjOrType, ...args) {
     let gameObject = ObjOrType
-    if (typeof ObjOrType === 'function') gameObject = new ObjOrType(args)
+    if (typeof ObjOrType === 'function') gameObject = new ObjOrType(...args)
 
     if (gameObject instanceof GameObject) {
       gameObject.parent = this
