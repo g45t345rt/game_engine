@@ -1,6 +1,6 @@
-import * as React from 'preact'
-import PropTypes from 'prop-types'
+import { h, Fragment } from 'preact'
 import { Component } from 'preact/compat'
+import PropTypes from 'prop-types'
 
 import TabObject from './TabObject'
 import ComponentEditor from './ComponentEditor'
@@ -45,8 +45,21 @@ export default class GameObjectEditor extends Component {
     this.state = {
       root: gameObject,
       currentObj: gameObject,
-      currentTab: 'gameobject'
+      currentTab: 'gameobject',
+      canDrag: false,
+      top: 0,
+      left: 0
     }
+  }
+
+  componentDidMount () {
+    document.addEventListener('mousemove', this.drag)
+    document.addEventListener('mouseup', this.quitDrag)
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('mousemove', this.drag)
+    document.addEventListener('mouseup', this.quitDrag)
   }
 
   setTab = (key) => {
@@ -63,12 +76,37 @@ export default class GameObjectEditor extends Component {
     */
   }
 
+  drag = (e) => {
+    const { canDrag, startX, startY } = this.state
+    if (!canDrag) return
+
+    const { x, y } = e
+    const nx = x - startX
+    const ny = y - startY
+
+    this.setState({ top: ny, left: nx })
+  }
+
+  startDrag = (e) => {
+    // Compute click grap offset
+    const { x, y } = this.ui.getBoundingClientRect()
+    const sx = e.x - x
+    const sy = e.y - y
+
+    this.setState({ canDrag: true, startX: sx, startY: sy })
+  }
+
+  quitDrag = () => {
+    this.setState({ canDrag: false })
+  }
+
   render = (props, state) => {
     const { currentTab, currentObj, root } = state
     const { parent, id, tag, gameObjects, components } = currentObj
 
-    return <div className={styles.ui}>
-      <div key="root" className={styles.properties}>
+    return <div class={styles.ui} style={{ top: this.state.top, left: this.state.left }} ref={(node) => (this.ui = node)}>
+      <div class={styles.grab} onMouseDown={this.startDrag} />
+      <div key='root' class={styles.properties}>
         <label>Root</label>
         <select value={currentObj.id} onChange={(e) => {
           const { value } = e.target
@@ -79,9 +117,9 @@ export default class GameObjectEditor extends Component {
         </select>
       </div>
       <TabObject name={currentObj.displayName()} obj={currentObj} onTabClick={() => (this.setTab('gameobject'))} />
-      {currentTab === 'gameobject' && <div key={id} className={styles.properties}>
-        {parent && <input type="button" onClick={() => (this.setState({ currentObj: parent }))} value="Go to parent" />}
-        {gameObjects.length > 0 && <React.Fragment>
+      {currentTab === 'gameobject' && <div key={id} class={styles.properties}>
+        {parent && <input type='button' onClick={() => (this.setState({ currentObj: parent }))} value='Go to parent' />}
+        {gameObjects.length > 0 && <Fragment>
           <label>Childrens</label>
           <select value onChange={(e) => {
             const { value } = e.target
@@ -95,32 +133,13 @@ export default class GameObjectEditor extends Component {
               })
             }
           </select>
-        </React.Fragment>}
+        </Fragment>}
         <label>Id</label>
         <span>{id}</span>
         <label>Tag</label>
-        <input type="text" value={tag || ''} onChange={(e) => (currentObj.tag = e.target.value)} />
+        <input type='text' value={tag || ''} onChange={(e) => (currentObj.tag = e.target.value)} />
       </div>}
       {components.map((component) => <ComponentEditor key={component.name} component={component} currentTab={currentTab} onTabClick={() => (this.setTab(component.name))} />)}
     </div>
   }
 }
-
-// Need this for later
-/*
-  <label>Origin</label>
-  <select value={Object.values(Origin)[[this.obj.ox, this.obj.oy]]} onChange={(e) => {
-    const { value } = e.target
-    this.obj.setOrigin(Origin[value])
-  }}>
-    {Object.keys(Origin).map((key) => {
-      return <option key={key} value={key}>{key}</option>
-    })}
-  </select>
-  <label>ox</label>
-  <input type="number" value={ox} onChange={(e) => (this.obj.ox = e.target.value)} />
-  <label>oy</label>
-  <input type="number" value={oy} onChange={(e) => (this.obj.oy = e.target.value)} />
-  <label>Origin POINT</label>
-  <span>{JSON.stringify(this.obj.getOriginPoint())}</span>
-*/

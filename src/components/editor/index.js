@@ -1,4 +1,4 @@
-import * as React from 'preact'
+import { h } from 'preact'
 import GameComponent from '../../gameComponent'
 import GameObjectEditor from './GameObjectEditor'
 

@@ -1,6 +1,11 @@
 GAME ENGINE
-☐ Implement sort order to customize rendering of components and gameobjects
+☐ Implement sort order for rendering components and gameobjects in layers (maybe I need a Renderer component to handle render sorting order)
 ☐ Network component (server & client loop sync) oooff big one!!!
+✔ Replace left menu bar with clickable simple dropdown @done(20-07-30 08:21)
+✔ Don't move player while moving camera (camera_box_move) @done(20-07-29 20:57)
+✔ Dragable editor (move around where you like it) @done(20-07-29 20:51)
+✔ Compress Transform editor definition @done(20-07-29 19:28)
+✔ Add editor definition for Box component @done(20-07-29 19:28)
 ✔ Fps counter should be more visible (black background & white text) @done(20-07-28 21:59)
 ✔ Client engine and Engine class should be functions @done(20-07-28 21:51)
 ✔ Fix origin matrix in Box component @done(20-07-28 21:43)

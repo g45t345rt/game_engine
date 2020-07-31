@@ -1,3 +1,4 @@
+import { h, Fragment } from 'preact'
 import GameComponent from '../gameComponent'
 import Transform from './transform'
 
@@ -13,6 +14,18 @@ export default class Grid extends GameComponent {
 
   onAdd = () => {
     this.gameObject.requiredComponent(Transform)
+  }
+
+  editorRender = () => {
+    return <Fragment>
+      <label>Spacing</label>
+      <div>
+        <label>W</label>
+        <input type='number' value={this.spaceWidth} step={0.1} onChange={(e) => (this.spaceWidth = e.target.valueAsNumber)} />
+        <label>H</label>
+        <input type='number' value={this.spaceHeight} step={0.1} onChange={(e) => (this.spaceHeight = e.target.valueAsNumber)} />
+      </div>
+    </Fragment>
   }
 
   render ({ ctx }) {

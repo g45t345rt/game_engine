@@ -1,6 +1,6 @@
 import GameComponent from '../gameComponent'
 import Transform from './transform'
-import * as React from 'preact'
+import { h, Fragment } from 'preact'
 
 export default class Camera extends GameComponent {
   constructor ({ vx, vy, vw, vh, vox, voy }) {
@@ -15,16 +15,16 @@ export default class Camera extends GameComponent {
   }
 
   editorRender = () => {
-    return <React.Fragment>
+    return <Fragment>
       <label>ViewX</label>
-      <input type="number" value={this.viewX} onChange={(e) => (this.viewX = e.target.valueAsNumber || 0)} />
+      <input type='number' value={this.viewX} onChange={(e) => (this.viewX = e.target.valueAsNumber || 0)} />
       <label>ViewY</label>
-      <input type="number" value={this.viewY} onChange={(e) => (this.viewY = e.target.valueAsNumber || 0)} />
+      <input type='number' value={this.viewY} onChange={(e) => (this.viewY = e.target.valueAsNumber || 0)} />
       <label>View Width</label>
-      <input type="number" value={this.viewW} onChange={(e) => (this.viewW = e.target.valueAsNumber || 0)} />
+      <input type='number' value={this.viewW} onChange={(e) => (this.viewW = e.target.valueAsNumber || 0)} />
       <label>View Height</label>
-      <input type="number" value={this.viewH} onChange={(e) => (this.viewH = e.target.valueAsNumber || 0)} />
-    </React.Fragment>
+      <input type='number' value={this.viewH} onChange={(e) => (this.viewH = e.target.valueAsNumber || 0)} />
+    </Fragment>
   }
 
   onAdd = () => {

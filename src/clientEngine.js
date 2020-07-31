@@ -1,4 +1,4 @@
-import * as React from 'preact'
+import { render as preactRender } from 'preact'
 import engine from './engine'
 
 const clientEngine = ({ game, fps, canvas, domRootId }) => {
@@ -8,7 +8,7 @@ const clientEngine = ({ game, fps, canvas, domRootId }) => {
   const ctx = canvas.getContext('2d')
 
   document.body.style = 'overflow:hidden'
-  React.render(game.domRender(), document.getElementById(domRootId))
+  preactRender(game.domRender(), document.getElementById(domRootId))
 
   const render = (timestamp) => {
     const { width, height } = canvas

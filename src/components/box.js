@@ -1,6 +1,8 @@
+import { h, Fragment } from 'preact'
 import GameComponent from '../gameComponent'
 import * as Matrix from 'transformation-matrix'
 import Transform from './transform'
+import Origin from '../misc/origin'
 
 export default class Box extends GameComponent {
   constructor ({ w, h, ox, oy }) {
@@ -18,6 +20,26 @@ export default class Box extends GameComponent {
     this.renderDirectionArrow = true
   }
 
+  editorRender = () => {
+    return <Fragment>
+      <label>Origin</label>
+      <select onChange={(e) => {
+        const { value } = e.target
+        this.setOrigin(Origin[value])
+      }}>
+        {Object.keys(Origin).map((key) => {
+          return <option key={key} value={key}>{key}</option>
+        })}
+      </select>
+      <label>ox</label>
+      <input type='number' value={this.ox} step={0.5} min={-1} max={1} onChange={(e) => (this.ox = e.target.valueAsNumber)} />
+      <label>oy</label>
+      <input type='number' value={this.oy} step={0.5} min={-1} max={1} onChange={(e) => (this.oy = e.target.valueAsNumber)} />
+      <label>Origin POINT</label>
+      <span>{JSON.stringify(this.getOriginPoint())}</span>
+    </Fragment>
+  }
+
   onAdd = () => {
     this.gameObject.requiredComponent(Transform)
   }
@@ -27,7 +49,7 @@ export default class Box extends GameComponent {
     this.oy = value[1]
   }
 
-  getOriginPoint = () => new DOMPoint(this.ox * this.width, this.oy * this.height)
+  getOriginPoint = () => ({ x: this.ox * this.width, y: this.oy * this.height })
 
   update () {
     const originPoint = this.getOriginPoint()
@@ -74,15 +96,19 @@ export default class Box extends GameComponent {
     if (!this.renderBoundingBox) return
 
     const rect = this.getBoundingBox()
+    ctx.save()
     ctx.strokeStyle = 'red'
     ctx.strokeRect(rect.x, rect.y, rect.w, rect.h)
+    ctx.restore()
   }
 
   drawBox (ctx) {
     if (!this.renderBox) return
 
+    ctx.save()
     ctx.strokeStyle = 'green'
     ctx.strokeRect(0, 0, this.width, this.height)
+    ctx.restore()
   }
 
   drawOrigin (ctx) {
@@ -93,19 +119,21 @@ export default class Box extends GameComponent {
     const rx = originPoint.x - (dotSize / 2)
     const ry = originPoint.y - (dotSize / 2)
 
+    ctx.save()
     ctx.fillStyle = 'blue'
     ctx.fillRect(rx, ry, dotSize, dotSize)
+    ctx.restore()
   }
 
   render ({ ctx }) {
     const transform = this.gameObject.getComponent(Transform)
+    this.drawBoundingBox(ctx)
+
     ctx.save()
     transform.apply(ctx)
     this.drawBox(ctx)
-    this.drawOrigin(ctx)
     this.drawDirectionArrow(ctx)
+    this.drawOrigin(ctx)
     ctx.restore()
-
-    this.drawBoundingBox(ctx)
   }
 }

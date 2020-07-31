@@ -1,6 +1,6 @@
-import * as React from 'preact'
-import PropTypes from 'prop-types'
+import { h, Fragment } from 'preact'
 import { Component } from 'preact/compat'
+import PropTypes from 'prop-types'
 import styles from './styles.module.css'
 
 export default class TabObject extends Component {
@@ -23,17 +23,17 @@ export default class TabObject extends Component {
     const hasUpdate = typeof update === 'function'
     const hasRender = typeof render === 'function'
 
-    return <div key={tabName} className={styles.tab} onClick={this.handleTabClick}>
+    return <div key={tabName} class={styles.tab} onClick={this.handleTabClick}>
       <div>{name}</div>
       <div>
-        {hasRender && <React.Fragment>
+        {hasRender && <Fragment>
           <span>R: </span>
-          <input type="checkbox" checked={canRender} title="Render" onChange={(e) => (obj.canRender = e.target.checked)} />
-        </React.Fragment>}
-        {hasUpdate && <React.Fragment>
+          <input type='checkbox' checked={canRender} title='Render' onChange={(e) => (obj.canRender = e.target.checked)} />
+        </Fragment>}
+        {hasUpdate && <Fragment>
           <span>U: </span>
-          <input type="checkbox" checked={canUpdate} title="Update" onChange={(e) => (obj.canUpdate = e.target.checked)} />
-        </React.Fragment>}
+          <input type='checkbox' checked={canUpdate} title='Update' onChange={(e) => (obj.canUpdate = e.target.checked)} />
+        </Fragment>}
       </div>
     </div>
   }

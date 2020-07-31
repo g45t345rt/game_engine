@@ -1,4 +1,4 @@
-import * as React from 'preact'
+import { h } from 'preact'
 import { Component } from 'preact/compat'
 
 import Game from './game'
@@ -13,7 +13,7 @@ export default class Index extends Component {
 
   render = () => {
     return <div>
-      <div id="editor"></div>
+      <div id='editor' />
       <canvas ref={(node) => (this.canvas = node)} />
     </div>
   }

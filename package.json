@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "parcel serve ./examples/index.html --port 8888",
     "build": "parcel build ./src/index.js --dist-dir ./build",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -24,21 +25,34 @@
     "transformation-matrix": "^2.4.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
+    "babel-eslint": "^11.0.0-beta.2",
     "eslint": "^7.5.0",
     "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-preact": "^1.1.6",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.20.5",
     "eslint-plugin-standard": "^4.0.1",
     "parcel": "^2.0.0-beta.1",
     "postcss-modules": "^3.2.0"
   },
   "alias": {
-    "react": "preact/compat",
-    "react-dom/test-utils": "preact/test-utils",
-    "react-dom": "preact/compat",
     "game_engine": "./src"
+  },
+  "babel": {
+    "plugins": [
+      [
+        "@babel/transform-react-jsx",
+        {
+          "pragma": "h"
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties"
+      ],
+      [
+        "@babel/plugin-proposal-private-methods"
+      ]
+    ]
   }
 }

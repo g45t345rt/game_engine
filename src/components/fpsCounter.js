@@ -1,5 +1,5 @@
 import GameComponent from '../gameComponent'
-import * as React from 'preact'
+import { h, Fragment } from 'preact'
 
 export default class FpsCounter extends GameComponent {
   constructor () {
@@ -13,10 +13,10 @@ export default class FpsCounter extends GameComponent {
   }
 
   editorRender = () => {
-    return <React.Fragment>
+    return <Fragment>
       <label>fps</label>
       <span>{this.fps}</span>
-    </React.Fragment>
+    </Fragment>
   }
 
   update () {

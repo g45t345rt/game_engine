@@ -1,6 +1,6 @@
 import GameComponent from '../gameComponent'
 import Transform from '../components/transform'
-import * as React from 'preact'
+import { h, Fragment } from 'preact'
 
 export default class Keyboard extends GameComponent {
   constructor () {
@@ -9,10 +9,10 @@ export default class Keyboard extends GameComponent {
   }
 
   editorRender = () => {
-    return <React.Fragment>
+    return <Fragment>
       <label>Key pressed</label>
       <span>{JSON.stringify(this.keyPressed, null, 2)}</span>
-    </React.Fragment>
+    </Fragment>
   }
 
   onAdd = () => {

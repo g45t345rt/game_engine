@@ -1,4 +1,4 @@
-import * as React from 'preact'
+import { h, Fragment } from 'preact'
 import { Component } from 'preact/compat'
 
 import TabObject from './TabObject'
@@ -11,16 +11,16 @@ export default class ComponentEditor extends Component {
 
     const render = () => {
       if (name === currentTab) {
-        if (typeof editorRender === 'function') return <div className={styles.properties}>{editorRender()}</div>
-        return <div key={name} className={styles.properties}><span>No definition for this component</span></div>
+        if (typeof editorRender === 'function') return <div class={styles.properties}>{editorRender(styles)}</div>
+        return <div key={name} class={styles.properties}><span>No definition for this component</span></div>
       }
 
       return null
     }
 
-    return <React.Fragment>
+    return <Fragment>
       <TabObject name={name} obj={component} onTabClick={onTabClick} />
       {render()}
-    </React.Fragment>
+    </Fragment>
   }
 }

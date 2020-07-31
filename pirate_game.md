@@ -1,4 +1,4 @@
-### The pirate game
+### 2D pirate game
 
 ##### Why
 To showcase the game engine and see if we are up to the challenge

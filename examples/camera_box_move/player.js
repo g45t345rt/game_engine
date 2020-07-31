@@ -7,7 +7,7 @@ export default class Player extends GameObject {
     super({ tag: 'player' })
 
     this.speed = 5
-    this.addComponent(Transform, { x: 100, y: 0 })
+    this.addComponent(Transform, { x: 100, y: 100 })
     this.addComponent(Box, { w: 50, h: 50 })
     this.addComponent(Keyboard)
     // this.addComponent(FollowMouse)
@@ -17,10 +17,12 @@ export default class Player extends GameObject {
     const transform = this.getComponent(Transform)
     const { isKeyDown } = this.getComponent(Keyboard)
 
-    if (isKeyDown('ArrowUp')) transform.y -= this.speed
-    if (isKeyDown('ArrowDown')) transform.y += this.speed
-    if (isKeyDown('ArrowLeft')) transform.x -= this.speed
-    if (isKeyDown('ArrowRight')) transform.x += this.speed
+    if (!isKeyDown('Control') && !isKeyDown('Shift')) {
+      if (isKeyDown('ArrowUp')) transform.y -= this.speed
+      if (isKeyDown('ArrowDown')) transform.y += this.speed
+      if (isKeyDown('ArrowLeft')) transform.x -= this.speed
+      if (isKeyDown('ArrowRight')) transform.x += this.speed
+    }
   }
 
   /*

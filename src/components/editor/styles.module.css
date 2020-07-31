@@ -1,9 +1,27 @@
 .ui {
   position: absolute;
-  right: 0;
-  max-height: 500px;
-  overflow: auto;
+  left: 0;
   width: 300px;
+  background-color: black;
+  border: thin solid black;
+  border-radius: 5px;
+}
+
+.grab {
+  background: #afafaf;
+  width: 20%;
+  height: 15px;
+  margin: 0 auto 15px auto;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.grab::after {
+  content: '....';
+  display: flex;
+  justify-content: center;
+  color: black;
+  font-size: 11px;
 }
 
 .tab {
@@ -13,11 +31,16 @@
   font-size: 13px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #2f2f2f;
   user-select: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.subtab {
+  padding: 5px;
+  font-size: 15px;
+  background-color: #e4e4e4;
 }
 
 .hide {
@@ -28,7 +51,10 @@
   display: flex;
   flex-direction: column;
   padding: 10px;
-  background-color: #383838;
+  background-color: white;
+  color: black;
+  max-height: 300px;
+  overflow: auto;
 }
 
 .properties > * {
@@ -39,16 +65,36 @@
   margin-bottom: 0;
 }
 
-.properties > span {
+.properties > div {
+  display: flex;
+  align-items: center;
+}
+
+.properties > div > * {
+  margin-right: 5px;
+}
+
+.properties > div > *:last-child {
+  margin-right: 0;
+}
+
+.properties input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.properties span {
   padding: 5px;
   border-radius: 2px;
-  background-color: #464646;
-  color: #b5b5b5;
+  background-color: #d8d8d8;
 }
 
 .properties > label {
-  color: white;
   margin-bottom: 5px;
   text-transform: uppercase;
   font-size: 12px;
+}
+
+.properties > div > label {
+  opacity: .7;
 }
