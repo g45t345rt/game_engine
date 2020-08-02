@@ -1,5 +1,4 @@
 import GameComponent from '../gameComponent'
-import Transform from '../components/transform'
 import { h, Fragment } from 'preact'
 
 export default class Keyboard extends GameComponent {
@@ -16,7 +15,6 @@ export default class Keyboard extends GameComponent {
   }
 
   onAdd = () => {
-    this.gameObject.requiredComponent(Transform)
     document.addEventListener('keydown', this.registerKeyDown)
     document.addEventListener('keyup', this.registerKeyUp)
     window.addEventListener('blur', this.clearKeys)

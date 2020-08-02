@@ -1,6 +1,8 @@
 GAME ENGINE
 ☐ Implement sort order for rendering components and gameobjects in layers (maybe I need a Renderer component to handle render sorting order)
 ☐ Network component (server & client loop sync) oooff big one!!!
+✔ Multiple camera example @done(20-08-02 13:47)
+✔ Fix origin Select key value @done(20-08-01 22:31)
 ✔ Replace left menu bar with clickable simple dropdown @done(20-07-30 08:21)
 ✔ Don't move player while moving camera (camera_box_move) @done(20-07-29 20:57)
 ✔ Dragable editor (move around where you like it) @done(20-07-29 20:51)

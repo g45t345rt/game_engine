@@ -7,24 +7,19 @@ import Map from './map'
 const { FpsCounter, Editor } = Components
 
 export default class Game extends GameObject {
-  constructor (canvas) {
+  constructor () {
     super({ tag: 'game' })
-    window.addEventListener('resize', this.onResize)
-
-    this.canvas = canvas
-    this.canvas.width = window.innerWidth
-    this.canvas.height = window.innerHeight
 
     this.addComponent(FpsCounter)
     this.addComponent(Editor)
 
-    const mainCamera = this.spawn(MainCamera)
-    mainCamera.spawn(Map, { w: 500, h: 500 })
-    mainCamera.spawn(Player)
-  }
+    const scene = new GameObject({ tag: 'scene' })
+    scene.canRender = false
+    scene.spawn(Map, { w: 500, h: 500 })
+    scene.spawn(Player)
 
-  onResize = () => {
-    this.canvas.width = window.innerWidth
-    this.canvas.height = window.innerHeight
+    this.addGameObject(scene)
+
+    this.spawn(MainCamera, { ref: scene })
   }
 }

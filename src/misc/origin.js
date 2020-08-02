@@ -6,4 +6,11 @@ const Origin = {
   MIDDLE: [0.5, 0.5]
 }
 
+export const getOriginKey = (value) => {
+  return Object.keys(Origin).find((key) => {
+    const objValue = Origin[key]
+    return objValue[0] === value[0] && objValue[1] === value[1]
+  })
+}
+
 export default Origin

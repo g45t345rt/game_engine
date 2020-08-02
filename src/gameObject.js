@@ -2,7 +2,7 @@ import shortid from 'shortid'
 import GameComponent from './gameComponent'
 
 export default class GameObject {
-  constructor ({ id, tag, x, y, s, r } = {}) {
+  constructor ({ id, tag } = {}) {
     this.id = id || shortid.generate()
     this.tag = tag || null
 
@@ -10,8 +10,19 @@ export default class GameObject {
     this.gameObjects = []
     this.components = []
 
+    this.explicitRender = false
     this.canRender = true
     this.canUpdate = true
+    this.isClient = typeof window !== 'undefined'
+  }
+
+  set enabled (enable) {
+    this.canRender = enable
+    this.canUpdate = enable
+  }
+
+  get enabled () {
+    return this.canUpdate && this.canRender
   }
 
   displayName () {
@@ -19,15 +30,18 @@ export default class GameObject {
     return this.id
   }
 
-  domRender () {
+  __domRender () {
     const dom = []
+
+    if (this.domRender && typeof domRender === 'function') dom.push(this.domRender())
+
     this.components.forEach((component) => {
       const { domRender } = component
       if (domRender && typeof domRender === 'function') dom.push(domRender())
     })
 
     this.gameObjects.forEach((gameObject) => {
-      dom.push(gameObject.domRender())
+      dom.push(gameObject.__domRender())
     })
 
     return dom
@@ -42,9 +56,9 @@ export default class GameObject {
   }
 
   __render (args) {
-    if (!this.canRender) return
+    const { ctx, force } = args
+    if (!this.canRender && !force) return
 
-    const { ctx } = args
     ctx.save()
     if (this.render && typeof this.render === 'function') this.render(args)
     this.components.forEach((component) => component.__render(args))
@@ -78,8 +92,13 @@ export default class GameObject {
     } else throw new Error('Cannot destroy itself. This gameobject does not have a parent.')
   }
 
-  getGameObject ({ id, tag, Type, returnWithIndex = false }) {
-    let found = null
+  addGameObject (gameObject) {
+    gameObject.parent = this
+    this.gameObjects.push(gameObject)
+  }
+
+  getGameObject ({ id, tag, Type, returnWithIndex = false, multiple = false }) {
+    let found = multiple ? [] : null
     for (let i = 0; i < this.gameObjects.length; i++) {
       const gameObject = this.gameObjects[i]
       if (
@@ -87,9 +106,14 @@ export default class GameObject {
         (tag && gameObject.tag === tag) ||
         (Type && gameObject instanceof Type)
       ) {
-        if (returnWithIndex) found = { index: i, gameObject }
-        else found = gameObject
-        break
+        let foundObject = gameObject
+        if (returnWithIndex) foundObject = { index: i, gameObject }
+
+        if (multiple) found.push(foundObject)
+        else {
+          found = foundObject
+          break
+        }
       }
     }
 

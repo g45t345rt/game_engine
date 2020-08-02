@@ -8,13 +8,29 @@ const clientEngine = ({ game, fps, canvas, domRootId }) => {
   const ctx = canvas.getContext('2d')
 
   document.body.style = 'overflow:hidden'
-  preactRender(game.domRender(), document.getElementById(domRootId))
+
+  // Resize canvas to window width
+  const onResize = () => {
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+  }
+
+  window.addEventListener('resize', onResize)
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+
+  // Render editor
+
+  if (domRootId) {
+    preactRender(game.__domRender(), document.getElementById(domRootId))
+  }
 
   const render = (timestamp) => {
     const { width, height } = canvas
     ctx.clearRect(0, 0, width, height)
 
     const deltaTime = timestamp - lastTimestamp // DeltaTime is the completion time in milliseconds since the last frame
+
     game.__render({ ctx, deltaTime })
     lastTimestamp = timestamp
 

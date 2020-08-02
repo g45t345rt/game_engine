@@ -2,7 +2,7 @@ import { h, Fragment } from 'preact'
 import GameComponent from '../gameComponent'
 import * as Matrix from 'transformation-matrix'
 import Transform from './transform'
-import Origin from '../misc/origin'
+import Origin, { getOriginKey } from '../misc/origin'
 
 export default class Box extends GameComponent {
   constructor ({ w, h, ox, oy }) {
@@ -23,7 +23,7 @@ export default class Box extends GameComponent {
   editorRender = () => {
     return <Fragment>
       <label>Origin</label>
-      <select onChange={(e) => {
+      <select value={getOriginKey([this.ox, this.oy])} onChange={(e) => {
         const { value } = e.target
         this.setOrigin(Origin[value])
       }}>

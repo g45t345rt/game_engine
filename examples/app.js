@@ -5,6 +5,7 @@ import { Component } from 'preact/compat'
 import 'normalize.css'
 
 import CameraBoxMove from './camera_box_move'
+import MultipleCamera from './multiple_camera'
 import styles from './styles.module.css'
 
 class Main extends Component {
@@ -21,6 +22,7 @@ class Main extends Component {
           {this.state.showExamples && <div class={styles.panel}>
             <ul class={styles.list}>
               <li><Link href='/camera_box_move'>Camera with box</Link></li>
+              <li><Link href='/multiple_camera'>Multiple camera</Link></li>
             </ul>
           </div>}
         </div>
@@ -28,6 +30,7 @@ class Main extends Component {
       <div>
         <Router>
           <CameraBoxMove path='/camera_box_move' />
+          <MultipleCamera path='/multiple_camera' />
         </Router>
       </div>
     </div>

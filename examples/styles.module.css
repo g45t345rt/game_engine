@@ -42,6 +42,19 @@ body {
   white-space: nowrap;
 }
 
+.list li {
+  margin-bottom: 10px;
+}
+
+.list li:last-child {
+  margin-bottom: 0;
+}
+
+.list li::before {
+  content: '■';
+  margin-right: 5px;
+}
+
 .list a {
   color: black;
 }
