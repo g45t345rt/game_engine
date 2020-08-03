@@ -138,6 +138,28 @@ export default class Transform extends GameComponent {
     ctx.transform(a, b, c, d, e, f)
   }
 
+  right (value) {
+    const matrix = Matrix.transform(
+      this.matrix,
+      Matrix.translate(value, 0)
+    )
+
+    const { x, y } = Matrix.applyToPoint(matrix, { x: 0, y: 0 })
+    this.x = x
+    this.y = y
+  }
+
+  up (value, ox, oy) {
+    const matrix = Matrix.transform(
+      this.matrix,
+      Matrix.translate(0, value)
+    )
+
+    const { x, y } = Matrix.applyToPoint(matrix, { x: ox || 0, y: oy || 0 })
+    this.x = x
+    this.y = y
+  }
+
   editorRender = (styles) => {
     const transform = this.#getParentTransform()
 

@@ -1,4 +1,4 @@
-const engine = ({ game, fps }) => {
+const engine = ({ game, fps = 60 }) => {
   const loopSyncTime = 1000 / fps
   let nextUpdateTime = 0
 

@@ -8,7 +8,7 @@ export default class Index extends Component {
   componentDidMount () {
     const canvas = this.canvas
     const game = new Game(canvas)
-    clientEngine({ canvas, game, fps: 60, domRootId: 'editor' })
+    clientEngine({ canvas, game })
   }
 
   render = () => {

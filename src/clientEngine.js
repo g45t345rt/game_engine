@@ -1,7 +1,7 @@
 import { render as preactRender } from 'preact'
 import engine from './engine'
 
-const clientEngine = ({ game, fps, canvas, domRootId }) => {
+const clientEngine = ({ game, canvas, fps = 60 }) => {
   engine({ game, fps })
 
   let lastTimestamp = 0
@@ -20,10 +20,9 @@ const clientEngine = ({ game, fps, canvas, domRootId }) => {
   canvas.height = window.innerHeight
 
   // Render editor
-
-  if (domRootId) {
-    preactRender(game.__domRender(), document.getElementById(domRootId))
-  }
+  const element = document.createElement('div')
+  document.body.appendChild(element)
+  preactRender(game.__domRender(), element)
 
   const render = (timestamp) => {
     const { width, height } = canvas

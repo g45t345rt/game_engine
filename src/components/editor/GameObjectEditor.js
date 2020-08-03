@@ -41,14 +41,17 @@ export default class GameObjectEditor extends Component {
   constructor (props) {
     super(props)
 
+    const stringPos = localStorage.getItem('editor_pos')
+    let pos = { top: 0, left: 0 }
+    if (stringPos) pos = JSON.parse(stringPos)
+
     const { gameObject } = props
     this.state = {
       root: gameObject,
       currentObj: gameObject,
       currentTab: 'gameobject',
       canDrag: false,
-      top: 0,
-      left: 0
+      ...pos
     }
   }
 
@@ -84,7 +87,9 @@ export default class GameObjectEditor extends Component {
     const nx = x - startX
     const ny = y - startY
 
-    this.setState({ top: ny, left: nx })
+    const pos = { top: ny, left: nx }
+    localStorage.setItem('editor_pos', JSON.stringify(pos))
+    this.setState(pos)
   }
 
   startDrag = (e) => {

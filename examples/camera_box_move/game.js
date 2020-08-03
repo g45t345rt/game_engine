@@ -1,6 +1,6 @@
 import { GameObject, Components } from 'game_engine'
 
-import MainCamera from './mainCamera'
+import MainCamera from '../presets/mainCamera'
 import Player from './player'
 import Map from './map'
 
@@ -20,6 +20,6 @@ export default class Game extends GameObject {
 
     this.addGameObject(scene)
 
-    this.spawn(MainCamera, { ref: scene })
+    this.spawn(MainCamera, { ref: scene, vw: 500, vh: 300 })
   }
 }
