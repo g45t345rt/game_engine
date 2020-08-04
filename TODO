@@ -1,8 +1,11 @@
 GAME ENGINE
 ☐ Implement sort order for rendering components and gameobjects in layers (maybe I need a Renderer component to handle render sorting order)
+☐ Networking example
+☐ Change canRender with ref camera
 ☐ Network component (server & client loop sync) oooff big one!!!
+✔ Clear editor when switching between examples @done(20-08-04 09:27)
 ✔ Editor keep position after reload @done(20-08-02 19:42)
-☐ New example with Path2D (moving boat around)
+✔ New example with Path2D (moving boat around) @done(20-08-03 08:53)
 ✔ Multiple camera example @done(20-08-02 13:47)
 ✔ Fix origin Select key value @done(20-08-01 22:31)
 ✔ Replace left menu bar with clickable simple dropdown @done(20-07-30 08:21)

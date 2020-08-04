@@ -20,8 +20,13 @@ const clientEngine = ({ game, canvas, fps = 60 }) => {
   canvas.height = window.innerHeight
 
   // Render editor
-  const element = document.createElement('div')
-  document.body.appendChild(element)
+  let element = document.getElementById('editor')
+  if (!element) {
+    element = document.createElement('div')
+    element.id = 'editor'
+    document.body.appendChild(element)
+  }
+
   preactRender(game.__domRender(), element)
 
   const render = (timestamp) => {

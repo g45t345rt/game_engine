@@ -13,7 +13,6 @@ export default class Index extends Component {
 
   render = () => {
     return <div>
-      <div id='editor' />
       <canvas ref={(node) => (this.canvas = node)} />
     </div>
   }

@@ -24,14 +24,14 @@ class Main extends Component {
             <ul class={styles.list}>
               <li><Link href='/camera_box_move'>Camera with box</Link></li>
               <li><Link href='/multiple_camera'>Multiple camera</Link></li>
-              <li><Link href='/set_path_boat'>Set path boat</Link></li>
+              <li><Link href='/path2d_draw_boat'>Path2D draw boat</Link></li>
             </ul>
           </div>}
         </div>
       </div>
       <div>
         <Router>
-          <SetPathBoat path='/set_path_boat' />
+          <SetPathBoat path='/path2d_draw_boat' />
           <CameraBoxMove path='/camera_box_move' />
           <MultipleCamera path='/multiple_camera' />
         </Router>
