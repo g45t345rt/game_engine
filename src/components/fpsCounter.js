@@ -1,7 +1,10 @@
 import GameComponent from '../gameComponent'
 import { h, Fragment } from 'preact'
+import Transform from './transform'
 
 export default class FpsCounter extends GameComponent {
+  static clientOnly = true
+
   constructor () {
     super('fpsCounter')
 
@@ -10,6 +13,10 @@ export default class FpsCounter extends GameComponent {
     this.count = 0
     this.timestamp = 0
     this.deltaTime = 0
+  }
+
+  onAdd = () => {
+    this.gameObject.requiredComponent(Transform)
   }
 
   editorRender = () => {
@@ -30,13 +37,11 @@ export default class FpsCounter extends GameComponent {
     }
   }
 
-  drawTextWithBackground (ctx, text) {
-
-  }
-
   render ({ ctx, deltaTime }) {
+    const transform = this.gameObject.getComponent(Transform)
     this.deltaTime = deltaTime
     ctx.save()
+    transform.apply(ctx)
     ctx.font = '20px sans-serif'
     ctx.textBaseline = 'top'
     ctx.fillStyle = 'black'

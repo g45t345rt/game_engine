@@ -1,6 +1,7 @@
 *.DS_Store
-/build
-/dist
+build
+dist
 node_modules/
 npm-debug.log
 .parcel-cache
+.cache

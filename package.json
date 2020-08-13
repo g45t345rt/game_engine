@@ -9,8 +9,9 @@
     "test": "tests"
   },
   "scripts": {
-    "dev": "parcel serve ./examples/index.html --port 8888",
-    "build": "parcel build ./src/index.js --dist-dir ./build",
+    "network-server": "node ./examples/network_move/server/bundler.js",
+    "dev": "parcel serve ./examples/index.html --port 8888 --out-dir ./examples/build",
+    "build": "parcel build ./src/index.js --out-dir ./build",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,13 +19,17 @@
   "license": "ISC",
   "dependencies": {
     "normalize.css": "^8.0.1",
+    "object": "^0.1.1",
     "preact": "^10.4.6",
     "preact-router": "^3.2.1",
     "prop-types": "^15.7.2",
     "shortid": "^2.2.15",
-    "transformation-matrix": "^2.4.0"
+    "transformation-matrix": "^2.4.0",
+    "websocket": "^1.0.31"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.0",
+    "autoprefixer": "^9.8.6",
     "babel-eslint": "^11.0.0-beta.2",
     "eslint": "^7.5.0",
     "eslint-config-standard": "^14.1.1",
@@ -33,7 +38,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "parcel": "^2.0.0-beta.1",
+    "parcel": "^1.12.4",
     "postcss-modules": "^3.2.0"
   },
   "alias": {
@@ -46,12 +51,6 @@
         {
           "pragma": "h"
         }
-      ],
-      [
-        "@babel/plugin-proposal-class-properties"
-      ],
-      [
-        "@babel/plugin-proposal-private-methods"
       ]
     ]
   }

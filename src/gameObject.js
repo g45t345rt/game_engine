@@ -1,8 +1,13 @@
 import shortid from 'shortid'
 import GameComponent from './gameComponent'
+import Dispatch from './dispatch'
 
-export default class GameObject {
-  constructor ({ id, tag } = {}) {
+export default class GameObject extends Dispatch {
+  static layers = ['pre', 'default', 'post']
+
+  constructor ({ id, tag, render, index, layer } = {}) {
+    super()
+
     this.id = id || shortid.generate()
     this.tag = tag || null
 
@@ -10,19 +15,14 @@ export default class GameObject {
     this.gameObjects = []
     this.components = []
 
-    this.explicitRender = false
-    this.canRender = true
-    this.canUpdate = true
+    this.renderPointer = null
+    if (render === 'self') this.renderPointer = this
+    if (render instanceof GameObject) this.renderPointer = render
+
+    this.layer = layer || 'default'
+    this.index = index || 0
+
     this.isClient = typeof window !== 'undefined'
-  }
-
-  set enabled (enable) {
-    this.canRender = enable
-    this.canUpdate = enable
-  }
-
-  get enabled () {
-    return this.canUpdate && this.canRender
   }
 
   displayName () {
@@ -30,40 +30,33 @@ export default class GameObject {
     return this.id
   }
 
-  __domRender () {
-    const dom = []
-
-    if (this.domRender && typeof domRender === 'function') dom.push(this.domRender())
+  dispatch (funcName, args) {
+    const result = []
+    result.push(super.dispatch(funcName, args))
 
     this.components.forEach((component) => {
-      const { domRender } = component
-      if (domRender && typeof domRender === 'function') dom.push(domRender())
+      result.push(component.dispatch(funcName, args))
     })
 
     this.gameObjects.forEach((gameObject) => {
-      dom.push(gameObject.__domRender())
+      result.push(gameObject.dispatch(funcName, args))
     })
 
-    return dom
+    return result
   }
 
-  __update () {
-    if (!this.canUpdate) return
+  findGameObjects (condition, child) {
+    if (!condition) condition = () => true
+    let list = []
 
-    if (this.update && typeof this.update === 'function') this.update()
-    this.components.forEach((component) => component.__update())
-    this.gameObjects.forEach((gameObject) => gameObject.__update())
-  }
+    const { gameObjects } = child || this
 
-  __render (args) {
-    const { ctx, force } = args
-    if (!this.canRender && !force) return
+    if (child && condition(child)) list = [child]
+    gameObjects.forEach((gameObject) => {
+      list = [...list, ...this.findGameObjects(condition, gameObject)]
+    })
 
-    ctx.save()
-    if (this.render && typeof this.render === 'function') this.render(args)
-    this.components.forEach((component) => component.__render(args))
-    this.gameObjects.forEach((gameObject) => gameObject.__render(args))
-    ctx.restore()
+    return list
   }
 
   spawn (ObjOrType, ...args) {
@@ -150,6 +143,8 @@ export default class GameObject {
   }
 
   addComponent (ComponentOrType, ...args) {
+    if (ComponentOrType.clientOnly && !this.isClient) return
+
     let component = ComponentOrType
     if (typeof ComponentOrType === 'function') component = new ComponentOrType(...args)
 

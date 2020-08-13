@@ -2,6 +2,8 @@ import GameComponent from '../gameComponent'
 import { h, Fragment } from 'preact'
 
 export default class Keyboard extends GameComponent {
+  static clientOnly = true
+
   constructor () {
     super('keyboard')
     this.keyPressed = {}

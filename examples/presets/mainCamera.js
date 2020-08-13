@@ -2,11 +2,24 @@ import { GameObject, Components } from 'game_engine'
 const { Camera, Keyboard, Transform } = Components
 
 export default class MainCamera extends GameObject {
-  constructor ({ ref, vx, vy, vw, vh, x, y }) {
-    super({ id: 'mainCamera' })
+  constructor ({ render, vx, vy, vw, vh, x, y }) {
+    super({ id: 'mainCamera', render })
+
     this.addComponent(Transform, { x, y })
-    this.addComponent(Camera, { vx, vy, vw, vh, ref })
+    this.addComponent(Camera, { vx, vy, vw, vh })
     this.addComponent(Keyboard)
+  }
+
+  preRender (args) {
+    const camera = this.getComponent(Camera)
+    const { ctx } = args
+    camera.attach(ctx)
+  }
+
+  postRender (args) {
+    const camera = this.getComponent(Camera)
+    const { ctx } = args
+    camera.detach(ctx)
   }
 
   update () {

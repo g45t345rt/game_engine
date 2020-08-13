@@ -6,7 +6,9 @@ import 'normalize.css'
 
 import CameraBoxMove from './camera_box_move'
 import MultipleCamera from './multiple_camera'
-import SetPathBoat from './set_path_boat'
+import Path2dDrawBoat from './path2d_draw_boat'
+import NetworkMove from './network_move'
+
 import styles from './styles.module.css'
 
 class Main extends Component {
@@ -25,13 +27,15 @@ class Main extends Component {
               <li><Link href='/camera_box_move'>Camera with box</Link></li>
               <li><Link href='/multiple_camera'>Multiple camera</Link></li>
               <li><Link href='/path2d_draw_boat'>Path2D draw boat</Link></li>
+              <li><Link href='/network_move'>Network move</Link></li>
             </ul>
           </div>}
         </div>
       </div>
       <div>
         <Router>
-          <SetPathBoat path='/path2d_draw_boat' />
+          <NetworkMove path='/network_move' />
+          <Path2dDrawBoat path='/path2d_draw_boat' />
           <CameraBoxMove path='/camera_box_move' />
           <MultipleCamera path='/multiple_camera' />
         </Router>

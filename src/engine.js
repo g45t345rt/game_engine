@@ -1,12 +1,20 @@
 const engine = ({ game, fps = 60 }) => {
   const loopSyncTime = 1000 / fps
-  let nextUpdateTime = 0
+  const now = () => (new Date()).getTime()
+
+  const dispatchUpdate = (gameObject) => {
+    const { components, gameObjects: childs } = gameObject
+    gameObject.dispatch('update')
+
+    components.forEach((component) => component.dispatch('update'))
+    childs.forEach((child) => child.dispatch('update'))
+  }
 
   const update = () => {
-    const updateStartTime = (new Date()).getTime()
-    game.__update()
-    nextUpdateTime = updateStartTime + loopSyncTime
-    setTimeout(update, nextUpdateTime - (new Date()).getTime())
+    const updateStartTime = now()
+    dispatchUpdate(game)
+    const nextUpdateTime = updateStartTime + loopSyncTime
+    setTimeout(update, nextUpdateTime - now())
   }
 
   update()

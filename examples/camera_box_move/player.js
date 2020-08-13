@@ -6,7 +6,8 @@ export default class Player extends GameObject {
   constructor () {
     super({ tag: 'player' })
 
-    this.speed = 5
+    this.speed = 1
+
     this.addComponent(Transform, { x: 100, y: 100 })
     this.addComponent(Box, { w: 50, h: 50 })
     this.addComponent(Keyboard)
