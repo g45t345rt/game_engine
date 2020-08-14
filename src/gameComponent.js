@@ -34,5 +34,6 @@ export default class GameComponent extends Dispatch {
     if (this.update && typeof this.update === 'function') this.update()
     if (this.clientUpdate && typeof this.clientUpdate === 'function' && this.isClient) this.clientUpdate()
     if (this.serverUpdate && typeof this.serverUpdate === 'function' && !this.isClient) this.serverUpdate()
-  }*/
+  }
+  */
 }

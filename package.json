@@ -20,7 +20,7 @@
   "dependencies": {
     "normalize.css": "^8.0.1",
     "object": "^0.1.1",
-    "preact": "^10.4.6",
+    "preact": "^10.4.7",
     "preact-router": "^3.2.1",
     "prop-types": "^15.7.2",
     "shortid": "^2.2.15",
@@ -28,12 +28,13 @@
     "websocket": "^1.0.31"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.0",
+    "@babel/core": "^7.11.1",
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^11.0.0-beta.2",
-    "eslint": "^7.5.0",
+    "eslint": "^7.6.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-config-standard-preact": "^1.1.6",
+    "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
@@ -46,6 +47,20 @@
   },
   "babel": {
     "plugins": [
+      [
+        "@babel/plugin-proposal-private-methods",
+        {
+          "loose": true
+        },
+        "privateMethods"
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        },
+        "classProperties"
+      ],
       [
         "@babel/transform-react-jsx",
         {

@@ -52,19 +52,6 @@ export default class Camera extends GameComponent {
     ctx.restore()
   }
 
-  /*
-  render (args) {
-    const { ctx } = args
-    this.attach(ctx)
-    //this.ref.dispatch('render', args, { bypassDisable: true })
-    //const renderer = this.ref.getComponent(Renderer)
-    //if (renderer) renderer.render(args)
-    //this.ref.dispatch('render', args)
-    //this.ref.__dispatchRender({ ...args, force: true })
-    //this.ref.__render({ ...args, force: true })
-    this.detach(ctx)
-  }*/
-
   attach (ctx) {
     ctx.save()
     ctx.beginPath()

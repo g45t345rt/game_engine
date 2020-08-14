@@ -1,4 +1,4 @@
-import { GameObject, Components } from 'game_engine'
+import { GameObject } from 'game_engine'
 import Player from './player'
 import FpsCounter from '../presets/fpsCounter'
 

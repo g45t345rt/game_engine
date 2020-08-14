@@ -22,7 +22,7 @@ export default class Player extends GameObject {
   }
 
   serverUpdate () {
-    //const transform = this.getComponent(Transform)
-    //transform.x += 0.1
+    // const transform = this.getComponent(Transform)
+    // transform.x += 0.1
   }
 }

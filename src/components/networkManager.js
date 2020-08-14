@@ -1,4 +1,5 @@
 import { GameComponent } from '../gameComponent'
+// import WebSocket from 'ws'
 
 export default class NetworkManager extends GameComponent {
   constructor ({ netId, clientUrl, serverPort }) {
@@ -12,17 +13,17 @@ export default class NetworkManager extends GameComponent {
   }
 
   onClientAwake = () => {
+    /*
     const webSocket = new WebSocket(this.url)
     webSocket.onmessage = (e) => this.gameObject.__dispatch('onNetClient', { e, netId })
     webSocket.onopen = (e) => this.gameObject.__dispatch('onNetClient', { e, netId })
     webSocket.onclose = (e) => this.gameObject.__dispatch('onNetClient', { e, netId })
     webSocket.onerror = (e) => this.gameObject.__dispatch('onNetClient', { e, netId })
     this.clientNetwork = webSocket
+    */
   }
 
   onServerAwake = () => {
-    import WebSocket from 'ws'
-    const wss = new WebSocket.Server({ port: 8080 })
-    
+    // const wss = new WebSocket.Server({ port: 8080 })
   }
 }
