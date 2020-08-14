@@ -1,12 +1,12 @@
 import GameComponent from './gameComponent'
 import GameObject from './gameObject'
 import Components from './components'
-import engine from './engine'
-import clientEngine from './clientEngine'
+import Engine from './engine'
+import ClientEngine from './clientEngine'
 
 export {
-  engine,
-  clientEngine,
+  Engine,
+  ClientEngine,
   Components,
   GameComponent,
   GameObject

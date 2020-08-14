@@ -46,9 +46,14 @@ body {
   margin-bottom: 0;
 }
 
-.list li::before {
+.list li a::before {
   content: '■';
   margin-right: 5px;
+  text-decoration: none;
+}
+
+.list li a.active::before {
+  color: blue;
 }
 
 .list a {
