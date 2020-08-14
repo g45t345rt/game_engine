@@ -21,14 +21,14 @@ const clientEngine = ({ game, canvas, fps = 60 }) => {
   canvas.height = window.innerHeight
 
   // Render editor
-  let element = document.getElementById('editor')
-  if (!element) {
-    element = document.createElement('div')
-    element.id = 'editor'
-    document.body.appendChild(element)
-  }
+  const editorElement = document.getElementById('editor')
+  if (editorElement) document.body.removeChild(editorElement)
 
-  preactRender(game.dispatch('domRender'), element)
+  const newEditorElement = document.createElement('div')
+  newEditorElement.id = 'editor'
+  document.body.appendChild(newEditorElement)
+
+  preactRender(game.dispatch('domRender'), newEditorElement)
 
   const sortRenderLogic = (list) => {
     list.sort((r1, r2) => r1.index - r2.index)
