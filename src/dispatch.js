@@ -1,7 +1,15 @@
+export const DispatchType = {
+  Both: 'both',
+  Client: 'client',
+  Server: 'server'
+}
+
 export default class Dispatch {
   constructor () {
+    this.dispatchType = DispatchType.Both
     this.enabled = true
     this.disabledFuncs = []
+    this.isClient = typeof window !== 'undefined'
   }
 
   toggleFunc (funcName) {
@@ -25,7 +33,10 @@ export default class Dispatch {
     if (!this.enabled) return false
     if (this.disabledFuncs.indexOf(funcName) !== -1) return false
 
-    return true
+    if (this.dispatchType === DispatchType.Both) return true
+    if (this.isClient && this.dispatchType === DispatchType.Client) return true
+    if (!this.isClient && this.dispatchType === DispatchType.Server) return true
+    return false
   }
 
   dispatch (funcName, args) {

@@ -56,13 +56,33 @@ export default class GameObjectEditor extends Component {
   }
 
   componentDidMount () {
+    this.clampEditorToScreen()
     document.addEventListener('mousemove', this.drag)
     document.addEventListener('mouseup', this.quitDrag)
+    window.addEventListener('resize', this.resize)
   }
 
   componentWillUnmount () {
     document.removeEventListener('mousemove', this.drag)
-    document.addEventListener('mouseup', this.quitDrag)
+    document.removeEventListener('mouseup', this.quitDrag)
+    window.removeEventListener('resize', this.resize)
+  }
+
+  resize = (e) => {
+    this.clampEditorToScreen()
+  }
+
+  clampEditorToScreen = () => {
+    const { x, y, width, height } = this.ui.getBoundingClientRect()
+
+    let nx = x
+    let ny = y
+
+    if (x + width >= window.innerWidth) nx = window.innerWidth - width
+    if (y + height >= window.innerHeight) ny = window.innerHeight - height
+
+    if (ny < 0) ny = 0
+    this.setPosition(nx, ny)
   }
 
   setTab = (key) => {
@@ -87,9 +107,12 @@ export default class GameObjectEditor extends Component {
     const nx = x - startX
     const ny = y - startY
 
-    const pos = { top: ny, left: nx }
-    localStorage.setItem('editor_pos', JSON.stringify(pos))
-    this.setState(pos)
+    this.setPosition(nx, ny)
+  }
+
+  setPosition = (left, top) => {
+    localStorage.setItem('editor_pos', JSON.stringify({ left, top }))
+    this.setState({ left, top })
   }
 
   startDrag = (e) => {

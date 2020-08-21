@@ -9,7 +9,7 @@ export default class Index extends Component {
 
     const { clientEngine } = this.state
     if (!clientEngine) {
-      const newClientEngine = new ClientEngine(game, this.canvas)
+      const newClientEngine = new ClientEngine(game, this.canvas, { wsUrl: 'ws://localhost:8080' })
       this.setState({ clientEngine: newClientEngine })
       newClientEngine.start()
     } else {

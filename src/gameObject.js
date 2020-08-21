@@ -4,6 +4,8 @@ import Dispatch from './dispatch'
 
 export default class GameObject extends Dispatch {
   static layers = ['pre', 'default', 'post']
+  #socket = null
+  #socketServer = null
 
   constructor ({ id, tag, render, index, layer } = {}) {
     super()
@@ -28,6 +30,22 @@ export default class GameObject extends Dispatch {
   displayName () {
     if (this.tag) return `${this.id} [${this.tag}]`
     return this.id
+  }
+
+  set socket (ws) { this.#socket = ws }
+
+  get socket () {
+    if (this.#socket) return this.#socket
+    if (this.parent) return this.parent.socket
+    return null
+  }
+
+  set socketServer (wss) { this.#socketServer = wss }
+
+  get socketServer () {
+    if (this.#socketServer) return this.#socketServer
+    if (this.parent) return this.parent.socketServer
+    return null
   }
 
   dispatch (funcName, args) {

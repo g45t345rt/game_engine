@@ -1,14 +1,16 @@
 import { render as preactRender } from 'preact'
 import GameObject from './gameObject'
 import Engine from './engine'
+const WebSocket = require('isomorphic-ws')
 
 export default class ClientEngine extends Engine {
   #domRenderElement = null
   #animationFrame = null
   #lastTimestamp = 0
-  constructor (game, canvas, options) {
+  constructor (game, canvas, options = {}) {
     super(game, options)
     this.canvas = canvas
+    this.wsUrl = options.wsUrl || null
   }
 
   start () {
@@ -21,6 +23,16 @@ export default class ClientEngine extends Engine {
       this.canvas.height = window.innerHeight
       this.ctx = this.canvas.getContext('2d')
       window.addEventListener('resize', this.onResize)
+    }
+
+    if (!this.ws && this.wsUrl) {
+      this.ws = new WebSocket(this.wsUrl)
+      this.ws.onopen = () => {
+        console.log('connected')
+        this.game.socket = this.ws
+      }
+
+      this.ws.addEventListener('message', (event) => this.game.dispatch('dataFromServer', event.data))
     }
 
     super.start()

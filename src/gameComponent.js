@@ -13,4 +13,7 @@ export default class GameComponent extends Dispatch {
     // Populated after the component is attached to a gameobject
     this.gameObject = null
   }
+
+  // onAdd = () => {}
+  // onRemove = () => {}
 }

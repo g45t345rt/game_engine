@@ -37,4 +37,8 @@ export default class Keyboard extends GameComponent {
   clearKeys = () => (this.keyPressed = {})
 
   isKeyDown = (key) => this.keyPressed[key]
+
+  isEveryKeysDown = (keys) => keys.every((key) => this.keyPressed[key])
+
+  isSomeKeysDown = (keys) => keys.some((key) => this.keyPressed[key])
 }

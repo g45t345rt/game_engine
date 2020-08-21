@@ -11,18 +11,31 @@ export default class Player extends GameObject {
     this.addComponent(Keyboard)
   }
 
-  clientUpdate () {
+  update () {
     const transform = this.getComponent(Transform)
-    const { isKeyDown } = this.getComponent(Keyboard)
+    if (this.isClient) {
+      const { isKeyDown, isSomeKeysDown } = this.getComponent(Keyboard)
 
-    if (isKeyDown('ArrowUp')) transform.y -= this.speed
-    if (isKeyDown('ArrowDown')) transform.y += this.speed
-    if (isKeyDown('ArrowLeft')) transform.x -= this.speed
-    if (isKeyDown('ArrowRight')) transform.x += this.speed
+      if (isSomeKeysDown(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'])) {
+        if (isKeyDown('ArrowUp')) transform.y -= this.speed
+        if (isKeyDown('ArrowDown')) transform.y += this.speed
+        if (isKeyDown('ArrowLeft')) transform.x -= this.speed
+        if (isKeyDown('ArrowRight')) transform.x += this.speed
+
+        //this.socket.send(transform.x)
+      }
+    } else {
+      //this.socket.send(Math.random() * 500)
+    }
   }
 
-  serverUpdate () {
-    // const transform = this.getComponent(Transform)
-    // transform.x += 0.1
+  dataFromServer (msg) {
+    const transform = this.getComponent(Transform)
+    transform.x = parseFloat(msg)
+    //console.log(msg)
+  }
+
+  dataFromClient (msg) {
+    console.log(msg)
   }
 }
