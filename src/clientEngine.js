@@ -1,44 +1,54 @@
 import { render as preactRender } from 'preact'
-import GameObject from './gameObject'
 import Engine from './engine'
 const WebSocket = require('isomorphic-ws')
 
 export default class ClientEngine extends Engine {
-  #domRenderElement = null
+  static #domRenderElement = null
   #animationFrame = null
   #lastTimestamp = 0
-  constructor (game, canvas, options = {}) {
-    super(game, options)
+  constructor (GameClass, canvas, options = {}) {
+    super(GameClass, options)
+
+    // canvas and context2d
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    this.ctx = canvas.getContext('2d')
     this.canvas = canvas
-    this.wsUrl = options.wsUrl || null
-  }
+    window.addEventListener('resize', this.onResize)
 
-  start () {
-    if (!this.#animationFrame) this.#animationFrame = requestAnimationFrame(this.renderer.bind(this))
-
-    this.domRenderer()
-
-    if (!this.ctx) {
-      this.canvas.width = window.innerWidth
-      this.canvas.height = window.innerHeight
-      this.ctx = this.canvas.getContext('2d')
-      window.addEventListener('resize', this.onResize)
-    }
-
-    if (!this.ws && this.wsUrl) {
-      this.ws = new WebSocket(this.wsUrl)
+    // websocket
+    if (options.wsUrl) {
+      this.ws = new WebSocket(options.wsUrl)
       this.ws.onopen = () => {
         console.log('connected')
         this.game.socket = this.ws
       }
-
-      this.ws.addEventListener('message', (event) => this.game.dispatch('dataFromServer', event.data))
     }
+  }
 
+  start () {
     super.start()
+
+    if (!this.#animationFrame) this.#animationFrame = requestAnimationFrame(this.renderer.bind(this))
+
+    this.domRenderer()
+    if (this.ws) this.ws.addEventListener('message', this.dispatchDataFromServer)
   }
 
   stop () {
+    super.stop()
+
+    if (this.ws) this.ws.removeEventListener('message', this.dispatchDataFromServer)
+  }
+
+  dispatchDataFromServer (event) {
+    this.game.dispatch('dataFromServer', event.data)
+  }
+
+  /*
+  stop () {
+    super.stop()
+
     if (this.#domRenderElement) {
       document.body.removeChild(this.#domRenderElement)
       this.#domRenderElement = null
@@ -51,30 +61,21 @@ export default class ClientEngine extends Engine {
 
     this.ctx = null
     window.removeEventListener('resize', this.onResize)
-
-    super.stop()
-  }
+  }*/
 
   onResize = () => {
     this.canvas.width = window.innerWidth
     this.canvas.height = window.innerHeight
   }
 
-  sortRenderLogic = (list) => {
-    list.sort((r1, r2) => r1.index - r2.index)
-
-    // sorting render layers
-    list.sort((r1, r2) => {
-      return GameObject.layers.indexOf(r1.layer) - GameObject.layers.indexOf(r2.layer)
-    })
-  }
-
   domRenderer () {
-    this.#domRenderElement = document.createElement('div')
-    document.body.appendChild(this.#domRenderElement)
+    if (!ClientEngine.#domRenderElement) {
+      ClientEngine.#domRenderElement = document.createElement('div')
+      document.body.appendChild(ClientEngine.#domRenderElement)
+    }
 
     const list = this.game.dispatch('domRender')
-    preactRender(list, this.#domRenderElement)
+    preactRender(list, ClientEngine.#domRenderElement)
   }
 
   renderer (timestamp) {
@@ -84,27 +85,7 @@ export default class ClientEngine extends Engine {
     const deltaTime = timestamp - this.#lastTimestamp // DeltaTime is the completion time in milliseconds since the last frame
 
     const args = { ctx: this.ctx, deltaTime }
-
-    // Get renderable points gameobjects
-    const gameObjects = this.game.findGameObjects((go) => {
-      return go.renderPointer !== null
-    })
-
-    if (this.game.renderPointer !== null) gameObjects.push(this.game)
-
-    this.sortRenderLogic(gameObjects)
-
-    gameObjects.forEach((go) => {
-      const { renderPointer } = go
-      const childs = renderPointer.findGameObjects()
-      go.dispatch('preRender', args)
-      go.dispatch('render', args)
-      this.sortRenderLogic(childs)
-      childs.forEach((child) => {
-        child.dispatch('render', args)
-      })
-      go.dispatch('postRender', args)
-    })
+    this.game.dispatch('render', args)
 
     this.#lastTimestamp = timestamp
     this.#animationFrame = requestAnimationFrame(this.renderer.bind(this))

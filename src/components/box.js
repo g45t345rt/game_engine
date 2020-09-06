@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { h, Fragment } from 'preact'
 import GameComponent from '../gameComponent'
 import * as Matrix from 'transformation-matrix'
@@ -5,25 +6,35 @@ import Transform from './transform'
 import Origin, { getOriginKey } from '../misc/origin'
 
 export default class Box extends GameComponent {
-  constructor ({ w, h, ox, oy }) {
+  constructor ({ w, h, oX, oY, flipX, flipY } = {}) {
     super('box')
 
     this.width = w || 10
     this.height = h || 10
+    this.flipX = flipX || false
+    this.flipY = flipY || false
 
-    this.ox = ox || 0.5
-    this.oy = oy || 0.5
+    this.oX = oX || 0
+    this.oY = oY || 0
 
-    this.renderBoundingBox = true
-    this.renderBox = true
-    this.renderOrigin = true
-    this.renderDirectionArrow = true
+    this.draw = true
+    this.drawBoundingBox = true
+    this.drawBox = true
+    this.drawOrigin = true
+    this.drawDirectionArrow = true
   }
 
   editorRender = () => {
     return <Fragment>
+      <label>Size</label>
+      <div>
+        <label>W</label>
+        <input type='number' value={this.width} step={1} onChange={(e) => (this.width = e.target.valueAsNumber)} />
+        <label>H</label>
+        <input type='number' value={this.height} step={1} onChange={(e) => (this.height = e.target.valueAsNumber)} />
+      </div>
       <label>Origin</label>
-      <select value={getOriginKey([this.ox, this.oy])} onChange={(e) => {
+      <select value={getOriginKey([this.oX, this.oy])} onChange={(e) => {
         const { value } = e.target
         this.setOrigin(Origin[value])
       }}>
@@ -31,34 +42,52 @@ export default class Box extends GameComponent {
           return <option key={key} value={key}>{key}</option>
         })}
       </select>
-      <label>ox</label>
-      <input type='number' value={this.ox} step={0.5} min={-1} max={1} onChange={(e) => (this.ox = e.target.valueAsNumber)} />
-      <label>oy</label>
-      <input type='number' value={this.oy} step={0.5} min={-1} max={1} onChange={(e) => (this.oy = e.target.valueAsNumber)} />
-      <label>Origin POINT</label>
+      <div>
+        <label>OX</label>
+        <input type='number' value={this.oX} step={0.5} min={0} max={1} onChange={(e) => (this.oX = e.target.valueAsNumber)} />
+        <label>OY</label>
+        <input type='number' value={this.oY} step={0.5} min={0} max={1} onChange={(e) => (this.oY = e.target.valueAsNumber)} />
+      </div>
+      <label>Origin Point</label>
       <span>{JSON.stringify(this.getOriginPoint())}</span>
+      <label>Flip</label>
+      <div>
+        <label>X</label>
+        <input type='checkbox' checked={this.flipX} onChange={(e) => (this.flipX = e.target.checked)} />
+        <label>Y</label>
+        <input type='checkbox' checked={this.flipY} onChange={(e) => (this.flipY = e.target.checked)} />
+      </div>
+      <label>Draw</label>
+      <input type='checkbox' checked={this.draw} onChange={(e) => (this.draw = e.target.checked)} />
+      <label>Draw Origin Point</label>
+      <input type='checkbox' checked={this.drawOrigin} onChange={(e) => (this.drawOrigin = e.target.checked)} />
+      <label>Draw Box Border</label>
+      <input type='checkbox' checked={this.drawBox} onChange={(e) => (this.drawBox = e.target.checked)} />
+      <label>Draw Direction Arrow</label>
+      <input type='checkbox' checked={this.drawDirectionArrow} onChange={(e) => (this.drawDirectionArrow = e.target.checked)} />
+      <label>Draw Bounding Box</label>
+      <input type='checkbox' checked={this.drawBoundingBox} onChange={(e) => (this.drawBoundingBox = e.target.checked)} />
     </Fragment>
   }
+
+  toString = () => `{w:${this.width}, h:${this.height}}`
 
   onAdd = () => {
     this.gameObject.requiredComponent(Transform)
   }
 
   setOrigin (value) {
-    this.ox = value[0]
-    this.oy = value[1]
+    this.oX = value[0]
+    this.oY = value[1]
   }
 
-  getOriginPoint = () => ({ x: this.ox * this.width, y: this.oy * this.height })
-
-  update () {
-    const originPoint = this.getOriginPoint()
-    const transform = this.gameObject.getComponent(Transform)
-    transform.translateSelf(-originPoint.x, -originPoint.y)
-  }
+  getOriginPoint = () => ({ x: this.oX * this.width, y: this.oY * this.height })
 
   getBoundingBox = () => {
-    const { matrix } = this.gameObject.getComponent(Transform)
+    const transform = this.gameObject.getComponent(Transform)
+    //const { x, y } = this.getOriginPoint()
+    //const matrix = Matrix.transform(transform.getMatrix(), Matrix.translate(-x, -y))
+    const matrix = transform.globalMatrix
     const bottomRight = Matrix.applyToPoint(matrix, { x: this.width, y: this.height })
     const topRight = Matrix.applyToPoint(matrix, { x: this.width, y: 0 })
     const topLeft = Matrix.applyToPoint(matrix, { x: 0, y: 0 })
@@ -73,67 +102,87 @@ export default class Box extends GameComponent {
 
   // Constrain movement
   limit = (x, y, w, h) => {
-    const b = this.getBoundingBox()
-    const originPoint = this.getOriginPoint()
-    if (b.x + b.width >= w) this.x = w - originPoint.x
-    if (b.x <= x) this.x = w + originPoint.x
-    if (b.y + b.height >= h) this.y = h - originPoint.y
-    if (b.y <= y) this.y = h + originPoint.y
+    const transform = this.gameObject.getComponent(Transform)
+    const box = this.getBoundingBox()
+    const op = this.getOriginPoint()
+
+    // Right
+    if (box.x + box.width >= w) transform.x = w - op.x
+    // Left
+    if (box.x <= x) transform.x = w + op.x
+    // Bottom
+    if (box.y + box.height >= h) transform.y = h - op.y
+    // Top
+    if (box.y <= y) transform.y = h + op.y
   }
 
-  drawDirectionArrow (ctx) {
-    if (!this.renderDirectionArrow) return
+  #drawDirectionArrow (ctx) {
+    if (!this.drawDirectionArrow) return
 
-    const originPoint = this.getOriginPoint()
+    const op = this.getOriginPoint()
     ctx.beginPath()
-    ctx.strokeStyle = 'green'
-    ctx.moveTo(originPoint.x, originPoint.y)
-    ctx.lineTo(originPoint.x + this.width / 2, originPoint.y)
+    ctx.strokeStyle = 'red'
+    ctx.moveTo(op.x, op.y)
+    ctx.lineTo(op.x + this.width / 2, op.y)
     ctx.stroke()
   }
 
-  drawBoundingBox (ctx) {
-    if (!this.renderBoundingBox) return
+  #drawBoundingBox (args) {
+    if (!this.drawBoundingBox) return
 
+    const { ctx, offsetMatrix } = args
     const rect = this.getBoundingBox()
     ctx.save()
+    ctx.resetTransform()
+    ctx.setTransform(offsetMatrix)
     ctx.strokeStyle = 'red'
     ctx.strokeRect(rect.x, rect.y, rect.w, rect.h)
     ctx.restore()
   }
 
-  drawBox (ctx) {
-    if (!this.renderBox) return
+  #drawBox (ctx) {
+    if (!this.drawBox) return
 
-    ctx.save()
     ctx.strokeStyle = 'green'
     ctx.strokeRect(0, 0, this.width, this.height)
-    ctx.restore()
   }
 
-  drawOrigin (ctx) {
-    if (!this.renderOrigin) return
+  #drawOrigin (ctx) {
+    if (!this.drawOrigin) return
 
     const dotSize = 5
     const originPoint = this.getOriginPoint()
     const rx = originPoint.x - (dotSize / 2)
     const ry = originPoint.y - (dotSize / 2)
 
-    ctx.save()
     ctx.fillStyle = 'blue'
     ctx.fillRect(rx, ry, dotSize, dotSize)
-    ctx.restore()
   }
 
-  render ({ ctx }) {
+  update () {
+    const op = this.getOriginPoint()
     const transform = this.gameObject.getComponent(Transform)
-    this.drawBoundingBox(ctx)
 
-    ctx.save()
-    transform.apply(ctx)
-    this.drawBox(ctx)
-    this.drawDirectionArrow(ctx)
-    this.drawOrigin(ctx)
-    ctx.restore()
+    transform.translate(-op.x, -op.y)
+
+    if (this.flipX) {
+      transform.translate(this.width, 0)
+      transform.scale(-1, 1)
+    }
+
+    if (this.flipY) {
+      transform.translate(0, this.height)
+      transform.scale(1, -1)
+    }
+  }
+
+  render (args) {
+    const { ctx } = args
+    if (this.draw) {
+      this.#drawBoundingBox(args)
+      this.#drawBox(ctx)
+      this.#drawDirectionArrow(ctx)
+      this.#drawOrigin(ctx)
+    }
   }
 }

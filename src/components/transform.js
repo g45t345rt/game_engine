@@ -3,19 +3,22 @@ import * as Matrix from 'transformation-matrix'
 import { h, Fragment } from 'preact'
 
 export default class Transform extends GameComponent {
-  #local = { x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0 } // position relative to parent
-
-  constructor ({ x, y, sx, sy, r } = {}) {
+  constructor ({ x, y, sX, sY, r, rX, rY } = {}) {
     super('transform')
 
     this.x = x || 0
     this.y = y || 0
-    this.scaleX = sx || 1
-    this.scaleY = sy || 1
+    this.scaleX = sX || 1
+    this.scaleY = sY || 1
     this.rotation = r || 0
+    this.rX = rX || 0
+    this.rY = rY || 0
 
-    this.updateMatrix()
+    this.drawRotationPoint = false
+    //this.localMatrix = Matrix.identity()
   }
+
+  toString = () => `{ x: ${this.x}, y: ${this.y}, r: ${this.rotation}, s: [${this.scaleX}, ${this.scaleY}] }`
 
   // eslint-disable-next-line no-undef
   #getParentTransform () {
@@ -30,117 +33,15 @@ export default class Transform extends GameComponent {
     return null
   }
 
-  // eslint-disable-next-line no-undef
-  #getLocal (key, op = '+') {
-    const transform = this.#getParentTransform()
-    if (transform) {
-      const parentKey = `local${key.charAt(0).toUpperCase() + key.slice(1)}`
-      if (op === '*') return transform[parentKey] * this.#local[key]
-      return transform[parentKey] + this.#local[key]
-    }
-
-    return this[key]
-  }
-
-  // eslint-disable-next-line no-undef
-  #setLocal (key, value, op = '-') {
-    const transform = this.#getParentTransform()
-    if (transform) {
-      const parentKey = `local${key.charAt(0).toUpperCase() + key.slice(1)}`
-      if (op === '/') return this.#local[key] = value / transform[parentKey]
-      return this.#local[key] = value - transform[parentKey]
-    }
-
-    this[key] = value
-  }
-
-  get localX () {
-    return this.#getLocal('x')
-  }
-
-  set localX (x) {
-    this.#setLocal('x', x)
-  }
-
-  get localY () {
-    return this.#getLocal('y')
-  }
-
-  set localY (y) {
-    return this.#setLocal('y', y)
-  }
-
-  get localRotation () {
-    return this.#getLocal('rotation')
-  }
-
-  set localRotation (r) {
-    this.#setLocal('rotation', r)
-  }
-
-  get localScaleX () {
-    return this.#getLocal('scaleX', '*')
-  }
-
-  set localScaleX (sx) {
-    this.#setLocal('scaleX', sx, '/')
-  }
-
-  get localScaleY () {
-    return this.#getLocal('scaleY', '*')
-  }
-
-  set localScaleY (sy) {
-    return this.#setLocal('scaleY', sy, '/')
-  }
-
   setRotationInDegree (deg) {
     this.rotation = deg * Math.PI / 180
   }
 
   getRotationInDegree = () => Math.round(this.rotation * 180 / Math.PI)
 
-  setLocalRotationInDegree (deg) {
-    this.localRotation = deg * Math.PI / 180
-  }
-
-  getLocalRotationInDegree = () => Math.round(this.localRotation * 180 / Math.PI)
-
-  updateMatrix () {
-    const transform = this.#getParentTransform()
-    if (transform) {
-      this.matrix = Matrix.transform(
-        Matrix.translate(this.x + this.localX, this.y + this.localY),
-        Matrix.rotate(this.rotation + this.localRotation),
-        Matrix.scale(this.scaleX * this.localScaleX, this.scaleY * this.localScaleY)
-      )
-
-      return
-    }
-
-    this.matrix = Matrix.transform(
-      Matrix.translate(this.x, this.y),
-      Matrix.rotate(this.rotation),
-      Matrix.scale(this.scaleX, this.scaleY)
-    )
-  }
-
-  translateSelf (x, y) {
-    this.matrix = Matrix.transform(
-      this.matrix,
-      Matrix.translate(x, y)
-    )
-    return this
-  }
-
-  apply (ctx) {
-    const { a, b, c, d, e, f } = this.matrix
-    ctx.transform(a, b, c, d, e, f)
-  }
-
   right (value) {
     const matrix = Matrix.transform(
-      this.matrix,
+      this.localMatrix,
       Matrix.translate(value, 0)
     )
 
@@ -151,7 +52,7 @@ export default class Transform extends GameComponent {
 
   up (value, ox, oy) {
     const matrix = Matrix.transform(
-      this.matrix,
+      this.localMatrix,
       Matrix.translate(0, value)
     )
 
@@ -164,8 +65,8 @@ export default class Transform extends GameComponent {
     const transform = this.#getParentTransform()
 
     return <Fragment>
-      <label class={styles.subtab}>Global</label>
       <label>Position</label>
+      {transform && <div>Relative to {transform.gameObject.displayName()}</div>}
       <div>
         <label>X</label>
         <input type='number' value={this.x} step={1} onChange={(e) => (this.x = e.target.valueAsNumber)} />
@@ -180,34 +81,90 @@ export default class Transform extends GameComponent {
         <input type='number' value={this.scaleY} step={0.1} onChange={(e) => (this.scaleY = e.target.valueAsNumber)} />
       </div>
       <label>Rotation</label>
-      <input type='number' value={this.getRotationInDegree()} step={1} min={-360} max={360} onChange={(e) => {
-        this.setRotationInDegree(e.target.valueAsNumber)
-      }} />
-      <label class={styles.subtab}>Local</label>
-      <label>Position</label>
-      {!transform && <div>No parent same as global</div>}
-      {transform && <div>Relative to {transform.gameObject.displayName()}</div>}
       <div>
+        <input type='number' value={this.getRotationInDegree()} step={1} min={-360} max={360} onChange={(e) => {
+          this.setRotationInDegree(e.target.valueAsNumber)
+        }} />
         <label>X</label>
-        <input type='number' value={this.localX} step={1} onChange={(e) => (this.localX = e.target.valueAsNumber)} />
+        <input type='number' value={this.rX} onChange={(e) => (this.rX = e.target.valueAsNumber)} />
         <label>Y</label>
-        <input type='number' value={this.localY} step={1} onChange={(e) => (this.localY = e.target.valueAsNumber)} />
+        <input type='number' value={this.rY} onChange={(e) => (this.rY = e.target.valueAsNumber)} />
       </div>
-      <label>Scale</label>
-      <div>
-        <label>X</label>
-        <input type='number' value={this.localScaleX} step={0.1} onChange={(e) => (this.localScaleX = e.target.valueAsNumber)} />
-        <label>Y</label>
-        <input type='number' value={this.localScaleY} step={0.1} onChange={(e) => (this.localScaleY = e.target.valueAsNumber)} />
-      </div>
-      <label>Rotation</label>
-      <input type='number' value={this.getLocalRotationInDegree()} step={1} min={-360} max={360} onChange={(e) => {
-        this.setLocalRotationInDegree(e.target.valueAsNumber)
-      }} />
     </Fragment>
   }
 
+  #setGlobalMatrix () {
+    const parentTransform = this.#getParentTransform()
+    let parentMatrix = Matrix.identity()
+    if (parentTransform) parentMatrix = parentTransform.globalMatrix
+
+    this.globalMatrix = Matrix.transform(
+      parentMatrix,
+      this.localMatrix
+    )
+  }
+
+  #setLocalMatrix () {
+    this.localMatrix = Matrix.transform(
+      Matrix.translate(this.x, this.y),
+      Matrix.scale(this.scaleX, this.scaleY),
+      Matrix.rotate(this.rotation, this.rX, this.rY)
+    )
+  }
+
+  transform (matrix) {
+    this.localMatrix = Matrix.transform(
+      this.localMatrix,
+      matrix
+    )
+
+    this.#setGlobalMatrix()
+  }
+
+  translate (x, y) {
+    this.localMatrix = Matrix.transform(
+      this.localMatrix,
+      Matrix.translate(x, y)
+    )
+
+    this.#setGlobalMatrix()
+  }
+
+  scale (x, y) {
+    this.localMatrix = Matrix.transform(
+      this.localMatrix,
+      Matrix.scale(x, y)
+    )
+
+    this.#setGlobalMatrix()
+  }
+
+  rotate (r) {
+    this.localMatrix = Matrix.transform(
+      this.localMatrix,
+      Matrix.ratate(r)
+    )
+
+    this.#setGlobalMatrix()
+  }
+
   update () {
-    this.updateMatrix()
+    this.#setLocalMatrix()
+    this.#setGlobalMatrix()
+  }
+
+  #drawRotationPoint (ctx) {
+    if (!this.drawRotationPoint) return
+    const dotSize = 5
+    ctx.fillStyle = 'purple'
+
+    ctx.fillRect(this.rX, this.rY, dotSize, dotSize)
+  }
+
+  render ({ ctx }) {
+    const { a, b, c, d, e, f } = this.localMatrix
+    ctx.transform(a, b, c, d, e, f)
+
+    this.#drawRotationPoint(ctx)
   }
 }

@@ -15,9 +15,11 @@ export default class Player extends GameObject {
     const transform = this.getComponent(Transform)
     const { isKeyDown } = this.getComponent(Keyboard)
 
-    if (isKeyDown('ArrowUp')) transform.y -= this.speed
-    if (isKeyDown('ArrowDown')) transform.y += this.speed
-    if (isKeyDown('ArrowLeft')) transform.x -= this.speed
-    if (isKeyDown('ArrowRight')) transform.x += this.speed
+    if (!isKeyDown('Control') || isKeyDown('Shift')) {
+      if (isKeyDown('ArrowUp')) transform.y -= this.speed
+      if (isKeyDown('ArrowDown')) transform.y += this.speed
+      if (isKeyDown('ArrowLeft')) transform.x -= this.speed
+      if (isKeyDown('ArrowRight')) transform.x += this.speed
+    }
   }
 }

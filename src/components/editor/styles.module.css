@@ -2,6 +2,7 @@
   position: absolute;
   left: 0;
   width: 300px;
+  min-width: 300px;
   background-color: black;
   border: thin solid black;
   border-radius: 5px;

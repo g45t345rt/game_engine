@@ -7,7 +7,7 @@ export default class GameObject extends Dispatch {
   #socket = null
   #socketServer = null
 
-  constructor ({ id, tag, render, index, layer } = {}) {
+  constructor ({ id, tag, explicitRender, index, layer } = {}) {
     super()
 
     this.id = id || shortid.generate()
@@ -17,9 +17,7 @@ export default class GameObject extends Dispatch {
     this.gameObjects = []
     this.components = []
 
-    this.renderPointer = null
-    if (render === 'self') this.renderPointer = this
-    if (render instanceof GameObject) this.renderPointer = render
+    this.explicitRender = explicitRender || false
 
     this.layer = layer || 'default'
     this.index = index || 0
@@ -30,6 +28,16 @@ export default class GameObject extends Dispatch {
   displayName () {
     if (this.tag) return `${this.id} [${this.tag}]`
     return this.id
+  }
+
+  static dispatchSortOrder (gameObjects) {
+    // sorting by index
+    gameObjects.sort((r1, r2) => r1.index - r2.index)
+
+    // sorting render layers
+    gameObjects.sort((r1, r2) => {
+      return GameObject.layers.indexOf(r1.layer) - GameObject.layers.indexOf(r2.layer)
+    })
   }
 
   set socket (ws) { this.#socket = ws }
@@ -48,19 +56,32 @@ export default class GameObject extends Dispatch {
     return null
   }
 
-  dispatch (funcName, args) {
-    const result = []
-    result.push(super.dispatch(funcName, args))
+  dispatch (funcName, args, options) {
+    const force = (options && options.force) || false
+    const results = []
+    if (funcName === 'render' && this.explicitRender && !force) return
 
-    this.components.forEach((component) => {
-      result.push(component.dispatch(funcName, args))
-    })
+    if (this.enabled) {
+      if (funcName === 'render') args.ctx.save()
 
-    this.gameObjects.forEach((gameObject) => {
-      result.push(gameObject.dispatch(funcName, args))
-    })
+      this.components.forEach((component) => {
+        const result = component.dispatch(funcName, args)
+        if (result) results.push(result)
+      })
 
-    return result
+      const result = super.dispatch(funcName, args)
+      if (result) results.push(result)
+
+      GameObject.dispatchSortOrder(this.gameObjects)
+      this.gameObjects.forEach((gameObject) => {
+        const result = gameObject.dispatch(funcName, args)
+        if (result && result.length > 0) results.push(result)
+      })
+
+      if (funcName === 'render') args.ctx.restore()
+    }
+
+    return results
   }
 
   findGameObjects (condition, child) {

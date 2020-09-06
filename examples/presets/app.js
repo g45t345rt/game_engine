@@ -5,16 +5,10 @@ import { ClientEngine } from 'game_engine'
 
 export default class Index extends Component {
   componentDidMount = () => {
-    const { game } = this.props
-
-    const { clientEngine } = this.state
-    if (!clientEngine) {
-      const newClientEngine = new ClientEngine(game, this.canvas, { wsUrl: 'ws://localhost:8080' })
-      this.setState({ clientEngine: newClientEngine })
-      newClientEngine.start()
-    } else {
-      clientEngine.start()
-    }
+    const { gameClass, options } = this.props
+    const clientEngine = new ClientEngine(gameClass, this.canvas, options)
+    clientEngine.start()
+    this.setState({ clientEngine })
   }
 
   componentWillUnmount () {

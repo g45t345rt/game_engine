@@ -2,11 +2,11 @@ import GameComponent from '../gameComponent'
 import { h, Fragment } from 'preact'
 import Transform from './transform'
 
-export default class FpsCounter extends GameComponent {
+export default class DrawFps extends GameComponent {
   static clientOnly = true
 
   constructor () {
-    super('fpsCounter')
+    super('drawFps')
 
     this.fps = 0
 
@@ -16,7 +16,7 @@ export default class FpsCounter extends GameComponent {
   }
 
   onAdd = () => {
-    this.gameObject.requiredComponent(Transform)
+    //this.gameObject.requiredComponent(Transform)
   }
 
   editorRender = () => {
@@ -26,29 +26,27 @@ export default class FpsCounter extends GameComponent {
     </Fragment>
   }
 
-  update () {
-    this.timestamp = this.timestamp + this.deltaTime
-    this.count += 1
+  render ({ ctx, deltaTime }) {
+    //const transform = this.gameObject.getComponent(Transform)
 
+    this.timestamp = this.timestamp + deltaTime
+    this.count++
     if (this.timestamp >= 1000) {
       this.fps = this.count
       this.count = 0
       this.timestamp = 0
     }
-  }
 
-  render ({ ctx, deltaTime }) {
-    const transform = this.gameObject.getComponent(Transform)
-    this.deltaTime = deltaTime
-    ctx.save()
-    transform.apply(ctx)
+    //ctx.save()
+    //transform.apply(ctx)
     ctx.font = '20px sans-serif'
     ctx.textBaseline = 'top'
     ctx.fillStyle = 'black'
     const width = ctx.measureText(this.fps).width
-    ctx.fillRect(0, 0, width, parseInt(ctx.font, 10))
+    const height = ctx.measureText('M').width // close approximation of the vertical height by checking the length of a capital M
+    ctx.fillRect(0, 0, width, height)
     ctx.fillStyle = 'white'
     ctx.fillText(this.fps, 0, 0)
-    ctx.restore()
+    //ctx.restore()
   }
 }

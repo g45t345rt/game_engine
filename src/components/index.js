@@ -1,19 +1,27 @@
 import Camera from './camera'
 import Box from './box'
 import FollowMouse from './followMouse'
-import FpsCounter from './fpsCounter'
+import DrawFps from './drawFps'
 import Transform from './transform'
 import Keyboard from './keyboard'
 import Editor from './editor'
 import Grid from './grid'
+import Image from './image'
+import DrawName from './drawName'
+import Mouse from './mouse'
+import MouseDrag from './mouseDrag'
 
 export default {
   Camera,
   Box,
   FollowMouse,
-  FpsCounter,
+  DrawFps,
   Transform,
   Keyboard,
   Editor,
-  Grid
+  Grid,
+  Image,
+  DrawName,
+  MouseDrag,
+  Mouse
 }

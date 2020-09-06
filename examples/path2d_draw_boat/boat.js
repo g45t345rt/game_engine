@@ -93,15 +93,12 @@ export default class Boat extends GameObject {
     super({ tag: 'boat' })
 
     this.addComponent(Transform, { x: 100, y: 100 })
-    this.addComponent(Box, { w: 40, h: 108 })
+    this.addComponent(Box, { w: 40, h: 108, oX: 0.5, oY: 0.5 })
     this.addComponent(Keyboard)
   }
 
   render (args) {
-    const transform = this.getComponent(Transform)
     const { ctx } = args
-    ctx.save()
-    transform.apply(ctx)
     const boat = boatDef.boat
     Object.keys(boat).forEach((key) => {
       const def = boat[key]
@@ -118,7 +115,6 @@ export default class Boat extends GameObject {
       ctx.fillStyle = def.color
       ctx.fill(p)
     })
-    ctx.restore()
   }
 
   update () {

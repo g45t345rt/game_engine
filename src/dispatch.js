@@ -27,6 +27,11 @@ export default class Dispatch {
     if (index === -1) this.disabledFuncs = [...this.disabledFuncs, funcName]
   }
 
+  setFunc (funcName, enabled) {
+    if (enabled) this.enableFunc(funcName)
+    else this.disableFunc(funcName)
+  }
+
   canDispatch (funcName) {
     if (!this[funcName]) return false
     if (typeof this[funcName] !== 'function') return false

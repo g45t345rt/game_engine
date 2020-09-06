@@ -8,7 +8,7 @@ export default class Editor extends GameComponent {
   }
 
   domRender = () => {
-    return <GameObjectEditor ref={(node) => (this.dom = node)} gameObject={this.gameObject} />
+    return <GameObjectEditor key={this.gameObject.id} ref={(node) => (this.dom = node)} gameObject={this.gameObject} />
   }
 
   update () {

@@ -1,44 +1,84 @@
 import { GameObject, Components } from 'game_engine'
-const { Camera, Keyboard, Transform } = Components
+const { Keyboard, Transform, Box } = Components
+
+class View extends GameObject {
+  constructor ({ gameObjectToRender, x, y, rX, rY }) {
+    super({ tag: 'view' })
+    this.gameObjectToRender = gameObjectToRender
+    this.addComponent(Transform, { x, y, rX, rY })
+  }
+
+  render (args) {
+    const transform = this.getComponent(Transform)
+    args.offsetMatrix = transform.globalMatrix
+    this.gameObjectToRender.dispatch('render', args, { force: true })
+  }
+}
 
 export default class MainCamera extends GameObject {
-  constructor ({ render, vx, vy, vw, vh, x, y }) {
-    super({ id: 'mainCamera', render })
+  constructor ({ gameObjectToRender, w, h, x, y, viewX, viewY }) {
+    super({ tag: 'mainCamera' })
 
     this.addComponent(Transform, { x, y })
-    this.addComponent(Camera, { vx, vy, vw, vh })
+    const box = this.addComponent(Box, { w, h })
+    box.draw = false
+
     this.addComponent(Keyboard)
+    this.spawn(View, { gameObjectToRender, x: viewX, y: viewY, w, h, rX: w/2, rY: h/2 })
+    //this.addComponent(MouseDrag)
   }
 
-  preRender (args) {
-    const camera = this.getComponent(Camera)
-    const { ctx } = args
-    camera.attach(ctx)
-  }
+  render ({ ctx }) {
+    // position modify by Transform component
+    const box = this.getComponent(Box)
+    const transform = this.getComponent(Transform)
+    const viewObject = this.getGameObject({ tag: 'view' })
+    const viewTransform = viewObject.getComponent(Transform)
 
-  postRender (args) {
-    const camera = this.getComponent(Camera)
-    const { ctx } = args
-    camera.detach(ctx)
+    const { width, height } = box
+
+    ctx.fillStyle = 'black'
+    ctx.fillRect(0, 0, width, height)
+
+    ctx.beginPath()
+    ctx.rect(0, 0, width, height)
+    ctx.clip()
+
+    ctx.textBaseline = 'top'
+    ctx.font = '12px sans-serif'
+    ctx.fillStyle = 'white'
+    ctx.fillText(`View: ${viewTransform.toString()}`, 0, 0)
+    ctx.fillText(`Camera: ${transform.toString()} ${box.toString()}`, 0, parseInt(ctx.font, 10))
   }
 
   update () {
     const { isKeyDown } = this.getComponent(Keyboard)
-    const camera = this.getComponent(Camera)
+    const transform = this.getComponent(Transform)
+    const viewObject = this.getGameObject({ tag: 'view' })
+    const viewTransform = viewObject.getComponent(Transform)
 
     if (isKeyDown('Shift')) {
-      if (isKeyDown('ArrowRight')) camera.viewX += 1
-      if (isKeyDown('ArrowLeft')) camera.viewX -= 1
-      if (isKeyDown('ArrowUp')) camera.viewY -= 1
-      if (isKeyDown('ArrowDown')) camera.viewY += 1
+      if (isKeyDown('ArrowRight')) viewTransform.x -= 1
+      if (isKeyDown('ArrowLeft')) viewTransform.x += 1
+      if (isKeyDown('ArrowUp')) viewTransform.y += 1
+      if (isKeyDown('ArrowDown')) viewTransform.y -= 1
     }
 
-    const transform = this.getComponent(Transform)
     if (isKeyDown('Control')) {
-      if (isKeyDown('ArrowRight')) transform.x -= 1
-      if (isKeyDown('ArrowLeft')) transform.x += 1
-      if (isKeyDown('ArrowUp')) transform.y += 1
-      if (isKeyDown('ArrowDown')) transform.y -= 1
+      if (isKeyDown('ArrowRight')) transform.x += 1
+      if (isKeyDown('ArrowLeft')) transform.x -= 1
+      if (isKeyDown('ArrowUp')) transform.y -= 1
+      if (isKeyDown('ArrowDown')) transform.y += 1
+    }
+
+    if (isKeyDown('=')) {
+      viewTransform.scaleX += 0.01
+      viewTransform.scaleY += 0.01
+    }
+
+    if (isKeyDown('-')) {
+      viewTransform.scaleX -= 0.01
+      viewTransform.scaleY -= 0.01
     }
   }
 }

@@ -6,6 +6,7 @@ import TabObject from './TabObject'
 import ComponentEditor from './ComponentEditor'
 
 import styles from './styles.module.css'
+import GameObject from '../../gameObject'
 
 const renderOption = (obj, indent = 1) => {
   const { id, gameObjects } = obj
@@ -129,7 +130,7 @@ export default class GameObjectEditor extends Component {
   }
 
   render = (props, state) => {
-    const { currentTab, currentObj, root } = state
+    const { currentTab, currentObj, root, engine } = state
     const { parent, id, tag, gameObjects, components } = currentObj
 
     return <div class={styles.ui} style={{ top: this.state.top, left: this.state.left }} ref={(node) => (this.ui = node)}>
@@ -141,10 +142,19 @@ export default class GameObjectEditor extends Component {
           const gameObject = findGameObjectDeep(root, value)
           if (gameObject) this.setState({ currentObj: gameObject })
         }}>
-          {renderOption(root)}
+          {!this.state.canDrag && renderOption(root)}
         </select>
+        <label>Update Loop</label>
+        <div>
+          <button disabled={root.engine.updating} onClick={() => root.engine.start()}>Start</button>
+          <button disabled={!root.engine.updating} onClick={() => {
+            root.engine.stop()
+            this.forceUpdate()
+          }}>Stop</button>
+          <button onClick={() => root.engine.reset()}>Reset</button>
+        </div>
       </div>
-      <TabObject name={currentObj.displayName()} obj={currentObj} onTabClick={() => (this.setTab('gameobject'))} />
+      <TabObject name={`GameObject [${currentObj.displayName()}]`} obj={currentObj} onTabClick={() => (this.setTab('gameobject'))} />
       {currentTab === 'gameobject' && <div key={id} class={styles.properties}>
         {parent && <input type='button' onClick={() => (this.setState({ currentObj: parent }))} value='Go to parent' />}
         {gameObjects.length > 0 && <Fragment>
@@ -156,7 +166,7 @@ export default class GameObjectEditor extends Component {
           }}>
             <option disabled value> -- select child gameobject -- </option>
             {
-              gameObjects.map((gameObject) => {
+              !this.state.canDrag && gameObjects.map((gameObject) => {
                 return <option key={gameObject.id} value={gameObject.id}>{gameObject.displayName()}</option>
               })
             }
@@ -166,6 +176,13 @@ export default class GameObjectEditor extends Component {
         <span>{id}</span>
         <label>Tag</label>
         <input type='text' value={tag || ''} onChange={(e) => (currentObj.tag = e.target.value)} />
+        <label>Layer / Index</label>
+        <div>
+          <select value={currentObj.layer} onChange={(e) => (currentObj.layer = e.target.value)}>
+            {GameObject.layers.map((layer) => <option key={layer} value={layer}>{layer}</option>)}
+          </select>
+          <input type='number' value={currentObj.index} step={1} onChange={(e) => (currentObj.index = e.target.valueAsNumber)} />
+        </div>
       </div>}
       {components.map((component) => <ComponentEditor key={component.name} component={component} currentTab={currentTab} onTabClick={() => (this.setTab(component.name))} />)}
     </div>

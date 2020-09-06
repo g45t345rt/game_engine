@@ -5,10 +5,13 @@ import { Component } from 'preact/compat'
 
 import 'normalize.css'
 
-import cameraBoxMove from './camera_box_move'
-import multipleCamera from './multiple_camera'
-import path2dDrawBoat from './path2d_draw_boat'
+import CameraBoxMove from './camera_box_move/game'
+import MultipleCamera from './multiple_camera/game'
+import Path2dDrawBoat from './path2d_draw_boat/game'
 import networkMove from './network_move'
+import Rocks from './rocks/game'
+
+import NoGame from './no_game'
 
 import App from './presets/app'
 
@@ -36,16 +39,19 @@ class Main extends Component {
               <li><Link activeClassName={styles.active} href='/multiple_camera'>Multiple camera</Link></li>
               <li><Link activeClassName={styles.active} href='/path2d_draw_boat'>Path2D draw boat</Link></li>
               <li><Link activeClassName={styles.active} href='/network_move'>Network move</Link></li>
+              <li><Link activeClassName={styles.active} href='/rocks'>Rocks</Link></li>
             </ul>
           </div>}
         </div>
       </div>
       <div>
         <Router>
-          <App key='camera_box_move' path='/camera_box_move' game={cameraBoxMove} />
-          <App key='multiple_camera' path='/multiple_camera' game={multipleCamera} />
-          <App key='path2d_draw_boat' path='/path2d_draw_boat' game={path2dDrawBoat} />
-          <App key='network_move' path='/network_move' game={networkMove} />
+          <App key='camera_box_move' path='/camera_box_move' gameClass={CameraBoxMove} />
+          <App key='multiple_camera' path='/multiple_camera' gameClass={MultipleCamera} />
+          <App key='path2d_draw_boat' path='/path2d_draw_boat' gameClass={Path2dDrawBoat} />
+          <App key='network_move' path='/network_move' game={networkMove} options={{ wsUrl: 'http://localhost:8080' }} />
+          <App key='car_dodge' path='/rocks' gameClass={Rocks} />
+          <NoGame path='/no_game' />
         </Router>
       </div>
     </div>

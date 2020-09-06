@@ -17,7 +17,7 @@ export default class TabObject extends Component {
 
   render (props) {
     const { name, obj } = props
-    const { canRender, canUpdate, update, render } = obj
+    const { canRender, canUpdate, enabled, update, render } = obj
 
     const tabName = `tab_${name}`
     const hasUpdate = typeof update === 'function'
@@ -26,6 +26,11 @@ export default class TabObject extends Component {
     return <div key={tabName} class={styles.tab} onClick={this.handleTabClick}>
       <div>{name}</div>
       <div>
+        <Fragment>
+          <span>E: </span>
+          <input type='checkbox' checked={enabled} title='Render' onChange={(e) => (obj.enabled = e.target.checked)} />
+        </Fragment>
+        {/*
         {hasRender && <Fragment>
           <span>R: </span>
           <input type='checkbox' checked={canRender} title='Render' onChange={(e) => (obj.canRender = e.target.checked)} />
@@ -33,7 +38,7 @@ export default class TabObject extends Component {
         {hasUpdate && <Fragment>
           <span>U: </span>
           <input type='checkbox' checked={canUpdate} title='Update' onChange={(e) => (obj.canUpdate = e.target.checked)} />
-        </Fragment>}
+        </Fragment>}*/}
       </div>
     </div>
   }
