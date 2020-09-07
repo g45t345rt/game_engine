@@ -4,8 +4,11 @@ import Dispatch from './dispatch'
 
 export default class GameObject extends Dispatch {
   static layers = ['pre', 'default', 'post']
+
+  // The root gameobject
   #socket = null
-  #socketServer = null
+  #server = null
+  #engine = null
 
   constructor ({ id, tag, explicitRender, index, layer } = {}) {
     super()
@@ -30,6 +33,33 @@ export default class GameObject extends Dispatch {
     return this.id
   }
 
+  set server (s) {
+    this.#server = s
+  }
+
+  get server () {
+    if (this.parent) return this.parent.server
+    return this.#server
+  }
+
+  set socket (s) {
+    this.#socket = s
+  }
+
+  get socket () {
+    if (this.parent) return this.parent.socket
+    return this.#socket
+  }
+
+  set engine (e) {
+    this.#engine = e
+  }
+
+  get engine () {
+    if (this.parent) return this.parent.engine
+    return this.#engine
+  }
+
   static dispatchSortOrder (gameObjects) {
     // sorting by index
     gameObjects.sort((r1, r2) => r1.index - r2.index)
@@ -38,22 +68,6 @@ export default class GameObject extends Dispatch {
     gameObjects.sort((r1, r2) => {
       return GameObject.layers.indexOf(r1.layer) - GameObject.layers.indexOf(r2.layer)
     })
-  }
-
-  set socket (ws) { this.#socket = ws }
-
-  get socket () {
-    if (this.#socket) return this.#socket
-    if (this.parent) return this.parent.socket
-    return null
-  }
-
-  set socketServer (wss) { this.#socketServer = wss }
-
-  get socketServer () {
-    if (this.#socketServer) return this.#socketServer
-    if (this.parent) return this.parent.socketServer
-    return null
   }
 
   dispatch (funcName, args, options) {

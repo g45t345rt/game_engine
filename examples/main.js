@@ -8,7 +8,7 @@ import 'normalize.css'
 import CameraBoxMove from './camera_box_move/game'
 import MultipleCamera from './multiple_camera/game'
 import Path2dDrawBoat from './path2d_draw_boat/game'
-import networkMove from './network_move'
+import NetworkMove from './network_move/game'
 import Rocks from './rocks/game'
 import ExplosionAnim from './explosion_anim/game'
 
@@ -51,7 +51,7 @@ class Main extends Component {
           <App key='camera_box_move' path='/camera_box_move' gameClass={CameraBoxMove} />
           <App key='multiple_camera' path='/multiple_camera' gameClass={MultipleCamera} />
           <App key='path2d_draw_boat' path='/path2d_draw_boat' gameClass={Path2dDrawBoat} />
-          <App key='network_move' path='/network_move' game={networkMove} options={{ wsUrl: 'http://localhost:8080' }} />
+          <App key='network_move' path='/network_move' gameClass={NetworkMove} options={{ wsUrl: 'ws://localhost:8080' }} />
           <App key='car_dodge' path='/rocks' gameClass={Rocks} />
           <App key='explosion_anim' path='/explosion_anim' gameClass={ExplosionAnim} />
           <NoGame path='/no_game' />

@@ -50,8 +50,10 @@ export default class Engine {
     this.game.dispatch('update')
     //this.#lastUpdate = currentTime
 
-    //const nextUpdateTime = this.now() + this.loopSyncTime
+    //const nextUpdateTime = this.now() + this.loopSyncMS
     //this.#timeoutUpdate = setTimeout(this.updater.bind(this), this.loopSyncMS)
-    this.#timeoutUpdate = setTimeout(this.updater.bind(this), 0)
+
+    // delay the timeout to match loop speed (fps)
+    this.#timeoutUpdate = setTimeout(this.updater.bind(this), this.loopSyncMS)
   }
 }

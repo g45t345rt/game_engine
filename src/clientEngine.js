@@ -21,8 +21,9 @@ export default class ClientEngine extends Engine {
       this.ws = new WebSocket(options.wsUrl)
       this.ws.onopen = () => {
         console.log('connected')
-        this.game.socket = this.ws
       }
+
+      this.game.socket = this.ws
     }
   }
 
@@ -41,7 +42,7 @@ export default class ClientEngine extends Engine {
     if (this.ws) this.ws.removeEventListener('message', this.dispatchDataFromServer)
   }
 
-  dispatchDataFromServer (event) {
+  dispatchDataFromServer = (event) => {
     this.game.dispatch('dataFromServer', event.data)
   }
 

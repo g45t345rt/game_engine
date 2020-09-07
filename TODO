@@ -1,6 +1,5 @@
 GAME ENGINE
-☐ Networking example
-☐ Network component (server & client loop sync) oooff big one!!!
+✔ Fix network move & add loop speed variable in the game engine @done(20-09-07 12:19)
 ✔ Sprite animation component with Svg Image (explosion animation examples) @done(20-09-07 11:24)
 ✔ Restart, play, start, stop machanism (update loop only) @done(20-09-05 09:45)
 ✔ Fix domRender undifined arrays @done(20-09-03 10:41)

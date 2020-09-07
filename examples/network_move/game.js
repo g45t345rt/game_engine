@@ -7,7 +7,6 @@ const { Editor } = Components
 export default class Game extends GameObject {
   constructor () {
     super({ tag: 'game' })
-    this.renderPointer = this
     this.addComponent(Editor)
     this.spawn(FpsCounter)
     this.spawn(Player)

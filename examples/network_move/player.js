@@ -25,13 +25,15 @@ export default class Player extends GameObject {
         //this.socket.send(transform.x)
       }
     } else {
-      //this.socket.send(Math.random() * 500)
+      this.socket.send(JSON.stringify({ x: Math.random() * 300, y: Math.random() * 300 }))
     }
   }
 
   dataFromServer (msg) {
+    const obj = JSON.parse(msg)
     const transform = this.getComponent(Transform)
-    transform.x = parseFloat(msg)
+    transform.x = parseInt(obj.x)
+    transform.y = parseInt(obj.y)
     //console.log(msg)
   }
 

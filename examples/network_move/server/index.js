@@ -1,6 +1,5 @@
 import { ServerEngine } from 'game_engine'
 import Game from '../game'
 
-const game = new Game()
-const gameEngine = new ServerEngine(game, 8080)
+const gameEngine = new ServerEngine(Game, 8080, { updatePerSeconds: 1 })
 gameEngine.start()

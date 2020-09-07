@@ -2,8 +2,8 @@ import Engine from './engine'
 import WebSocket from 'isomorphic-ws'
 
 export default class ServerEngine extends Engine {
-  constructor (game, port, options = {}) {
-    super(game, options)
+  constructor (GameClass, port, options = {}) {
+    super(GameClass, options)
     this.port = port
   }
 
@@ -11,7 +11,7 @@ export default class ServerEngine extends Engine {
     if (this.port && !this.wss) {
       this.wss = new WebSocket.Server({ port: this.port })
 
-      this.game.serverSocket = this.wss
+      this.game.server = this.wss
       this.wss.on('connection', (ws) => {
         this.game.socket = ws
 
