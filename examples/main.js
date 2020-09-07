@@ -11,6 +11,7 @@ import Path2dDrawBoat from './path2d_draw_boat/game'
 import NetworkMove from './network_move/game'
 import Rocks from './rocks/game'
 import ExplosionAnim from './explosion_anim/game'
+import BoatWithCannon from './boat_with_cannon/game'
 
 import NoGame from './no_game'
 
@@ -42,6 +43,7 @@ class Main extends Component {
               <li><Link activeClassName={styles.active} href='/network_move'>Network move</Link></li>
               <li><Link activeClassName={styles.active} href='/rocks'>Rocks</Link></li>
               <li><Link activeClassName={styles.active} href='/explosion_anim'>Explosion anim</Link></li>
+              <li><Link activeClassName={styles.active} href='/boat_with_cannon'>Boat with cannon</Link></li>
             </ul>
           </div>}
         </div>
@@ -54,6 +56,7 @@ class Main extends Component {
           <App key='network_move' path='/network_move' gameClass={NetworkMove} options={{ wsUrl: 'ws://localhost:8080' }} />
           <App key='car_dodge' path='/rocks' gameClass={Rocks} />
           <App key='explosion_anim' path='/explosion_anim' gameClass={ExplosionAnim} />
+          <App key='boat_with_cannon' path='/boat_with_cannon' gameClass={BoatWithCannon} />
           <NoGame path='/no_game' />
         </Router>
       </div>

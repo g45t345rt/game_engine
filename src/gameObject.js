@@ -118,9 +118,10 @@ export default class GameObject extends Dispatch {
 
     if (gameObject instanceof GameObject) {
       gameObject.parent = this
-      const { onSpawn } = gameObject
-      if (onSpawn && typeof onSpawn === 'function') onSpawn()
+      //const { onSpawn } = gameObject
+      //if (onSpawn && typeof onSpawn === 'function') onSpawn()
 
+      gameObject.dispatch('onSpawn')
       this.gameObjects.push(gameObject)
     }
 
@@ -131,10 +132,12 @@ export default class GameObject extends Dispatch {
     if (this.parent) {
       const self = this.parent.getGameObject({ id: this.id, returnWithIndex: true })
       const { gameObject, index } = self
-      const { onDestroy } = gameObject
-      if (onDestroy && typeof onDestroy === 'function') onDestroy()
+      //const { onDestroy } = gameObject
+      //if (onDestroy && typeof onDestroy === 'function') onDestroy()
 
-      this.parent.gameObject.splice(index, 1)
+      gameObject.dispatch('onDestroy')
+
+      this.parent.gameObjects.splice(index, 1)
     } else throw new Error('Cannot destroy itself. This gameobject does not have a parent.')
   }
 

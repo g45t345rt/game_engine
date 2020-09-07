@@ -130,13 +130,14 @@ export default class GameObjectEditor extends Component {
   }
 
   render = (props, state) => {
-    const { currentTab, currentObj, root, engine } = state
+    const { currentTab, currentObj, root } = state
     const { parent, id, tag, gameObjects, components } = currentObj
 
     return <div class={styles.ui} style={{ top: this.state.top, left: this.state.left }} ref={(node) => (this.ui = node)}>
       <div class={styles.grab} onMouseDown={this.startDrag} />
       <div key='root' class={styles.properties}>
         <label>Root</label>
+
         <select value={currentObj.id} onChange={(e) => {
           const { value } = e.target
           const gameObject = findGameObjectDeep(root, value)
@@ -144,6 +145,8 @@ export default class GameObjectEditor extends Component {
         }}>
           {!this.state.canDrag && renderOption(root)}
         </select>
+        <label>Total gameobjects</label>
+        <span>{root.findGameObjects().length}</span>
         <label>Update Loop</label>
         <div>
           <button disabled={root.engine.updating} onClick={() => root.engine.start()}>Start</button>

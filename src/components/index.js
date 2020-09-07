@@ -11,6 +11,7 @@ import DrawName from './drawName'
 import Mouse from './mouse'
 import MouseDrag from './mouseDrag'
 import Sprite from './sprite'
+import Lifespan from './lifespan'
 
 export default {
   Camera,
@@ -25,5 +26,6 @@ export default {
   DrawName,
   MouseDrag,
   Mouse,
-  Sprite
+  Sprite,
+  Lifespan
 }
