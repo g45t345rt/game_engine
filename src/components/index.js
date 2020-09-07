@@ -10,6 +10,7 @@ import Image from './image'
 import DrawName from './drawName'
 import Mouse from './mouse'
 import MouseDrag from './mouseDrag'
+import Sprite from './sprite'
 
 export default {
   Camera,
@@ -23,5 +24,6 @@ export default {
   Image,
   DrawName,
   MouseDrag,
-  Mouse
+  Mouse,
+  Sprite
 }

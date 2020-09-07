@@ -10,6 +10,7 @@ import MultipleCamera from './multiple_camera/game'
 import Path2dDrawBoat from './path2d_draw_boat/game'
 import networkMove from './network_move'
 import Rocks from './rocks/game'
+import ExplosionAnim from './explosion_anim/game'
 
 import NoGame from './no_game'
 
@@ -40,6 +41,7 @@ class Main extends Component {
               <li><Link activeClassName={styles.active} href='/path2d_draw_boat'>Path2D draw boat</Link></li>
               <li><Link activeClassName={styles.active} href='/network_move'>Network move</Link></li>
               <li><Link activeClassName={styles.active} href='/rocks'>Rocks</Link></li>
+              <li><Link activeClassName={styles.active} href='/explosion_anim'>Explosion anim</Link></li>
             </ul>
           </div>}
         </div>
@@ -51,6 +53,7 @@ class Main extends Component {
           <App key='path2d_draw_boat' path='/path2d_draw_boat' gameClass={Path2dDrawBoat} />
           <App key='network_move' path='/network_move' game={networkMove} options={{ wsUrl: 'http://localhost:8080' }} />
           <App key='car_dodge' path='/rocks' gameClass={Rocks} />
+          <App key='explosion_anim' path='/explosion_anim' gameClass={ExplosionAnim} />
           <NoGame path='/no_game' />
         </Router>
       </div>
