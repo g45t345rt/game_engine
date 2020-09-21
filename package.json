@@ -13,25 +13,28 @@
     "dev": "parcel serve ./examples/index.html --port 8888 --out-dir ./examples/build",
     "build": "parcel build ./src/index.js --out-dir ./build",
     "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "isomorphic-ws": "^4.0.1",
     "normalize.css": "^8.0.1",
-    "preact": "^10.4.7",
+    "preact": "^10.4.8",
+    "preact-compat": "^3.19.0",
     "preact-router": "^3.2.1",
     "prop-types": "^15.7.2",
+    "react-select": "^3.1.0",
     "shortid": "^2.2.15",
     "transformation-matrix": "^2.4.0",
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.1",
+    "@babel/core": "^7.11.6",
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^11.0.0-beta.2",
-    "eslint": "^7.6.0",
+    "babel-jest": "^26.3.0",
+    "eslint": "^7.9.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-config-standard-preact": "^1.1.6",
     "eslint-plugin-babel": "^5.3.1",
@@ -39,13 +42,23 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "jest": "^26.4.2",
+    "jest-css-modules": "^2.1.0",
     "parcel": "^1.12.4",
-    "postcss-modules": "^3.2.0"
+    "postcss-modules": "^3.2.2"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules"
+    }
   },
   "alias": {
     "game_engine": "./src"
   },
   "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
     "plugins": [
       [
         "@babel/plugin-proposal-private-methods",

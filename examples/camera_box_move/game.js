@@ -4,13 +4,10 @@ import MainCamera from '../presets/mainCamera'
 import FpsCounter from '../presets/fpsCounter'
 import Player from './player'
 
-const { Editor } = Components
-
 export default class Game extends GameObject {
   constructor () {
     super({ tag: 'game' })
 
-    this.addComponent(Editor)
     this.spawn(FpsCounter, { index: 1 })
 
     const scene = new GameObject({ tag: 'scene', explicitRender: true })

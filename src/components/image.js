@@ -29,7 +29,7 @@ export default class Image extends GameComponent {
   }
 
   onAdd = () => {
-    this.gameObject.requiredComponent(Transform)
+    //this.gameObject.requiredComponent(Transform)
     this.initImage()
   }
 

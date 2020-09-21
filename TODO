@@ -1,4 +1,13 @@
 GAME ENGINE
+☐ Replace <select> with Select preact component (select is bugged with forceUpdate)
+✔ Add jest to project (test cases) @done(20-09-15 18:05)
+☐ Posibility of transform to not inherit parent matrix (but set startup matrix)
+✔ Editor should be part of the game engine (not a component) @done(20-09-10 22:44)
+✔ Add easing functions @done(20-09-10 08:57)
+✔ Repalce Tweenjs with own animate component @done(20-09-10 08:57)
+✔ Fix timestamp and deltatime (replace now() with performance.now()) components should be using deltatime instead of there own timer @done(20-09-09 12:03)
+✔ Tween update should be in update @done(20-09-09 11:33)
+✔ memory leak while switching between examples (need to clear requestanimation timer) @done(20-09-09 11:54)
 ✔ Fix network move & add loop speed variable in the game engine @done(20-09-07 12:19)
 ✔ Sprite animation component with Svg Image (explosion animation examples) @done(20-09-07 11:24)
 ✔ Restart, play, start, stop machanism (update loop only) @done(20-09-05 09:45)

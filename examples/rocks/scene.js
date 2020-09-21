@@ -2,14 +2,15 @@ import { GameObject, Components } from 'game_engine'
 import Rock from './rock'
 
 const { Box, Transform } = Components
+const rand = (max) => Math.floor(Math.random() * max)
 
 export default class Scene extends GameObject {
   constructor ({ objCount }) {
-    super({ id: 'scene' })
+    super({ tag: 'scene' })
 
     //this.explicitRender = true
-    const rand = (max) => Math.floor(Math.random() * max)
-    this.addComponent(Transform, { x: 0, y: 0 })
+
+    //this.addComponent(Transform, { x: 0, y: 0 })
     //const box = this.addComponent(Box, { w: 500, h: 500 })
     //box.draw = false
 
@@ -19,5 +20,14 @@ export default class Scene extends GameObject {
 
       this.spawn(Rock, { x, y })
     }
+  }
+
+  spawnRock () {
+    this.spawn(Rock, { x: rand(300), y: rand(300) })
+  }
+
+  destroyRock () {
+    const rocks = this.findGameObjects((go) => go instanceof Rock)
+    if (rocks.length > 0) rocks[0].destroy()
   }
 }

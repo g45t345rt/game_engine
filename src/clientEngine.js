@@ -1,9 +1,10 @@
-import { render as preactRender } from 'preact'
+import { h, render as preactRender } from 'preact'
 import Engine from './engine'
+import Editor from './editor'
+
 const WebSocket = require('isomorphic-ws')
 
 export default class ClientEngine extends Engine {
-  static #domRenderElement = null
   #animationFrame = null
   #lastTimestamp = 0
   constructor (GameClass, canvas, options = {}) {
@@ -25,14 +26,18 @@ export default class ClientEngine extends Engine {
 
       this.game.socket = this.ws
     }
+
+    // editor
+    this.showEditor = true
+    if (options.showEditor) this.showEditor = options.showEditor
+
+    this.renderEditor()
   }
 
   start () {
     super.start()
 
     if (!this.#animationFrame) this.#animationFrame = requestAnimationFrame(this.renderer.bind(this))
-
-    this.domRenderer()
     if (this.ws) this.ws.addEventListener('message', this.dispatchDataFromServer)
   }
 
@@ -42,41 +47,37 @@ export default class ClientEngine extends Engine {
     if (this.ws) this.ws.removeEventListener('message', this.dispatchDataFromServer)
   }
 
-  dispatchDataFromServer = (event) => {
-    this.game.dispatch('dataFromServer', event.data)
-  }
-
-  /*
-  stop () {
-    super.stop()
-
-    if (this.#domRenderElement) {
-      document.body.removeChild(this.#domRenderElement)
-      this.#domRenderElement = null
-    }
+  clear () {
+    this.stop()
 
     if (this.#animationFrame) {
       cancelAnimationFrame(this.#animationFrame)
       this.#animationFrame = null
     }
 
-    this.ctx = null
     window.removeEventListener('resize', this.onResize)
-  }*/
+  }
+
+  dispatchDataFromServer = (event) => {
+    this.game.dispatch('dataFromServer', event.data)
+  }
 
   onResize = () => {
     this.canvas.width = window.innerWidth
     this.canvas.height = window.innerHeight
   }
 
-  domRenderer () {
-    if (!ClientEngine.#domRenderElement) {
-      ClientEngine.#domRenderElement = document.createElement('div')
-      document.body.appendChild(ClientEngine.#domRenderElement)
-    }
+  renderEditor () {
+    if (!this.showEditor) return
+    let div = document.getElementById('editor')
+    if (div) document.body.removeChild(div)
+    div = document.createElement('div')
+    div.id = 'editor'
+    document.body.appendChild(div)
 
-    const list = this.game.dispatch('domRender')
-    preactRender(list, ClientEngine.#domRenderElement)
+    preactRender(<Editor key={this.game.key} ref={(node) => {
+      setInterval(node.forceUpdate.bind(node), 1000 / 10)
+    }} game={this.game} />, div)
   }
 
   renderer (timestamp) {
@@ -85,8 +86,18 @@ export default class ClientEngine extends Engine {
 
     const deltaTime = timestamp - this.#lastTimestamp // DeltaTime is the completion time in milliseconds since the last frame
 
-    const args = { ctx: this.ctx, deltaTime }
-    this.game.dispatch('render', args)
+    //const args = { ctx: this.ctx, deltaTime }
+    this.game.dispatch('render', {
+      ctx: this.ctx,
+      deltaTime,
+      pre: ({ explicitRender }) => {
+        if (explicitRender) return false
+        this.ctx.save()
+        return true
+      },
+      post: () => { this.ctx.restore() }
+    })
+    //if (this.editorDom) setTimeout(this.editorDom.forceUpdate, 1000)
 
     this.#lastTimestamp = timestamp
     this.#animationFrame = requestAnimationFrame(this.renderer.bind(this))

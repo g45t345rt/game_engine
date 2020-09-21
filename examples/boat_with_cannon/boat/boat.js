@@ -1,4 +1,5 @@
 import { GameObject, Components } from 'game_engine'
+import { h, Fragment } from 'preact'
 import Image from '../../assets/image'
 const { Keyboard, Transform, Box } = Components
 
@@ -119,22 +120,22 @@ const sailImage = new Image({
 })
 
 class Sail extends GameObject {
-  constructor ({ x, y }) {
-    super({ id: 'sail' })
+  constructor ({ x, y, ...props }) {
+    super({ tag: 'sail', ...props })
 
     this.addComponent(Transform, { x, y, r: 0.3 })
-    this.addComponent(Box, { w: 66, h: 70, oX: 0.5, oY: 0.5 })
+    this.addComponent(Box, { w: 66, h: 70, oX: 0.5, oY: 0.5, draw: false })
   }
 
   render ({ ctx }) {
-    ctx.globalAlpha = 0.7
+    ctx.globalAlpha = 0.9
     ctx.drawImage(sailImage.image, 0, 0)
   }
 }
 
 export default class Boat extends GameObject {
   constructor ({ x, y }) {
-    super({ id: 'boat' })
+    super({ tag: 'boat' })
 
     this.speed = 0
     this.turn = 0
@@ -146,17 +147,31 @@ export default class Boat extends GameObject {
     this.addComponent(Box, { w: boatImage.image.width, h: boatImage.image.height, oX: 0.5, oY: 0.5 })
     this.addComponent(Keyboard)
 
+    const cannonDeck = new GameObject({ tag: 'cannon_deck' })
+    cannonDeck.addComponent(Transform)
     // left cannons
-    this.spawn(Cannon, { x: -10, y: 10, flipX: true })
-    this.spawn(Cannon, { x: -10, y: 30, flipX: true })
-    this.spawn(Cannon, { x: -10, y: 50, flipX: true })
+    cannonDeck.spawn(Cannon, { x: 20, y: 30, r: Transform.toRadian(180) })
+    cannonDeck.spawn(Cannon, { x: 20, y: 50, r: Transform.toRadian(180) })
+    cannonDeck.spawn(Cannon, { x: 20, y: 70, r: Transform.toRadian(180) })
 
     // right cannons
-    this.spawn(Cannon, { x: 20, y: 10 })
-    this.spawn(Cannon, { x: 20, y: 30 })
-    this.spawn(Cannon, { x: 20, y: 50 })
+    cannonDeck.spawn(Cannon, { x: 20, y: 10 })
+    cannonDeck.spawn(Cannon, { x: 20, y: 30 })
+    cannonDeck.spawn(Cannon, { x: 20, y: 50 })
 
-    this.spawn(Sail, { x: 20, y: 25 })
+    // front cannon
+    cannonDeck.spawn(Cannon, { x: 30, y: 75, r: Transform.toRadian(90) })
+
+    this.spawn(cannonDeck)
+    this.cannonDeck = cannonDeck
+    this.spawn(Sail, { x: 20, y: 25, index: 2 })
+  }
+
+  editorRender = () => {
+    return <Fragment>
+      <label>Speed</label>
+      <input type='number' value={this.speed} onChange={(e) => (this.speed = e.target.valueAsNumber)} />
+    </Fragment>
   }
 
   render ({ ctx }) {
@@ -169,7 +184,10 @@ export default class Boat extends GameObject {
     const transform = this.getComponent(Transform)
 
     const { x, y } = box.getOriginPoint()
-    transform.up(this.speed, x, y)
+
+    const { x: x1, y: y2 } = transform.up(this.speed, x, y)
+    transform.x = x1
+    transform.y = y2
 
     if (isKeyDown('a')) {
       transform.rotation -= 0.01 * this.speed
@@ -192,7 +210,7 @@ export default class Boat extends GameObject {
     }
 
     if (isKeyDown(' ')) {
-      const cannons = this.getGameObject({ tag: 'cannon', multiple: true })
+      const cannons = this.cannonDeck.getGameObject({ tag: 'cannon', multiple: true })
       cannons.forEach((cannon) => cannon.shoot())
     }
   }

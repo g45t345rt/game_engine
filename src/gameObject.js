@@ -10,10 +10,10 @@ export default class GameObject extends Dispatch {
   #server = null
   #engine = null
 
-  constructor ({ id, tag, explicitRender, index, layer } = {}) {
+  constructor ({ tag, explicitRender, index, layer } = {}) {
     super()
 
-    this.id = id || shortid.generate()
+    this.key = shortid.generate()
     this.tag = tag || null
 
     this.parent = null
@@ -21,7 +21,6 @@ export default class GameObject extends Dispatch {
     this.components = []
 
     this.explicitRender = explicitRender || false
-
     this.layer = layer || 'default'
     this.index = index || 0
 
@@ -29,8 +28,8 @@ export default class GameObject extends Dispatch {
   }
 
   displayName () {
-    if (this.tag) return `${this.id} [${this.tag}]`
-    return this.id
+    if (this.tag) return `${this.tag} [${this.key}]`
+    return this.key
   }
 
   set server (s) {
@@ -70,13 +69,15 @@ export default class GameObject extends Dispatch {
     })
   }
 
-  dispatch (funcName, args, options) {
-    const force = (options && options.force) || false
+  dispatch (funcName, args = {}) {
     const results = []
-    if (funcName === 'render' && this.explicitRender && !force) return
+    const { pre, post } = args
 
     if (this.enabled) {
-      if (funcName === 'render') args.ctx.save()
+      if (pre && typeof pre === 'function') {
+        const shouldContinue = pre(this)
+        if (!shouldContinue) return
+      }
 
       this.components.forEach((component) => {
         const result = component.dispatch(funcName, args)
@@ -88,11 +89,11 @@ export default class GameObject extends Dispatch {
 
       GameObject.dispatchSortOrder(this.gameObjects)
       this.gameObjects.forEach((gameObject) => {
-        const result = gameObject.dispatch(funcName, args)
+        gameObject.dispatch(funcName, args)
         if (result && result.length > 0) results.push(result)
       })
 
-      if (funcName === 'render') args.ctx.restore()
+      if (post && typeof post === 'function') post()
     }
 
     return results
@@ -130,7 +131,7 @@ export default class GameObject extends Dispatch {
 
   destroy () {
     if (this.parent) {
-      const self = this.parent.getGameObject({ id: this.id, returnWithIndex: true })
+      const self = this.parent.getGameObject({ key: this.key, returnWithIndex: true })
       const { gameObject, index } = self
       //const { onDestroy } = gameObject
       //if (onDestroy && typeof onDestroy === 'function') onDestroy()
@@ -146,12 +147,12 @@ export default class GameObject extends Dispatch {
     this.gameObjects.push(gameObject)
   }
 
-  getGameObject ({ id, tag, Type, returnWithIndex = false, multiple = false }) {
+  getGameObject ({ key, tag, Type, returnWithIndex = false, multiple = false }) {
     let found = multiple ? [] : null
     for (let i = 0; i < this.gameObjects.length; i++) {
       const gameObject = this.gameObjects[i]
       if (
-        (id && gameObject.id === id) ||
+        (key && gameObject.key === key) ||
         (tag && gameObject.tag === tag) ||
         (Type && gameObject instanceof Type)
       ) {
@@ -167,6 +168,10 @@ export default class GameObject extends Dispatch {
     }
 
     return found
+  }
+
+  clearGameObjects () {
+    this.gameObjects = []
   }
 
   getComponent (nameOrType, returnWithIndex = false) {

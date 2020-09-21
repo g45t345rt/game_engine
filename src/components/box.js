@@ -6,7 +6,7 @@ import Transform from './transform'
 import Origin, { getOriginKey } from '../misc/origin'
 
 export default class Box extends GameComponent {
-  constructor ({ w, h, oX, oY, flipX, flipY } = {}) {
+  constructor ({ w, h, oX, oY, flipX, flipY, draw } = {}) {
     super('box')
 
     this.width = w || 10
@@ -17,7 +17,9 @@ export default class Box extends GameComponent {
     this.oX = oX || 0
     this.oY = oY || 0
 
-    this.draw = true
+    if (draw === undefined) this.draw = true
+    else this.draw = draw
+
     this.drawBoundingBox = true
     this.drawBox = true
     this.drawOrigin = true
@@ -87,7 +89,7 @@ export default class Box extends GameComponent {
     const transform = this.gameObject.getComponent(Transform)
     //const { x, y } = this.getOriginPoint()
     //const matrix = Matrix.transform(transform.getMatrix(), Matrix.translate(-x, -y))
-    const matrix = transform.globalMatrix
+    const matrix = transform.matrix
     const bottomRight = Matrix.applyToPoint(matrix, { x: this.width, y: this.height })
     const topRight = Matrix.applyToPoint(matrix, { x: this.width, y: 0 })
     const topLeft = Matrix.applyToPoint(matrix, { x: 0, y: 0 })
@@ -159,7 +161,7 @@ export default class Box extends GameComponent {
     ctx.fillRect(rx, ry, dotSize, dotSize)
   }
 
-  update () {
+  engineUpdate () {
     const op = this.getOriginPoint()
     const transform = this.gameObject.getComponent(Transform)
 

@@ -13,7 +13,7 @@ export default class Index extends Component {
 
   componentWillUnmount () {
     const { clientEngine } = this.state
-    clientEngine.stop()
+    clientEngine.clear()
   }
 
   render = () => {

@@ -1,0 +1,18 @@
+[Engine]
+-list of gameobjects
+-
+
+[renderer]
+60 frames per seconds
+logic
+  -get all gameobjects from tree and keep list
+  -check if sorting is necessary
+    -sort by index
+    -sort by layer
+  -call 'render'
+
+[updater]
+logic
+  -get all gameobjects from tree
+  -call 'update'
+

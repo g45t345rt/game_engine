@@ -3,44 +3,44 @@ import GameComponent from '../gameComponent'
 import Transform from './transform'
 
 export default class Grid extends GameComponent {
-  constructor ({ w, h, sw, sh }) {
+  constructor ({ width, height, spacing }) {
     super('grid')
 
-    this.width = w
-    this.height = h
-    this.spaceWidth = sw || 10
-    this.spaceHeight = sh || 10
+    this.width = width
+    this.height = height
+    this.spacing = spacing || 10
   }
 
   onAdd = () => {
-    this.gameObject.requiredComponent(Transform)
+    //this.gameObject.requiredComponent(Transform)
   }
 
   editorRender = () => {
     return <Fragment>
-      <label>Spacing</label>
+      <label>Size</label>
       <div>
         <label>W</label>
-        <input type='number' value={this.spaceWidth} step={0.1} onChange={(e) => (this.spaceWidth = e.target.valueAsNumber)} />
+        <input type='number' value={this.width} step={1} onChange={(e) => (this.width = e.target.valueAsNumber)} />
         <label>H</label>
-        <input type='number' value={this.spaceHeight} step={0.1} onChange={(e) => (this.spaceHeight = e.target.valueAsNumber)} />
+        <input type='number' value={this.height} step={1} onChange={(e) => (this.height = e.target.valueAsNumber)} />
       </div>
+      <label>Spacing</label>
+      <input type='number' value={this.spacing} step={1} onChange={(e) => (this.spacing = e.target.valueAsNumber)} />
     </Fragment>
   }
 
   render ({ ctx }) {
-    const transform = this.gameObject.getComponent(Transform)
-    const xLines = this.width / this.spaceWidth
-    const yLines = this.height / this.spaceHeight
+    //const transform = this.gameObject.getComponent(Transform)
+    const xLines = this.width / this.spacing
+    const yLines = this.height / this.spacing
 
     ctx.save()
-    transform.apply(ctx)
     ctx.strokeStyle = 'black'
     ctx.globalAlpha = 0.3
 
     // horizontal
     for (let i = 0; i <= xLines; i++) {
-      const line = i * this.spaceHeight
+      const line = i * this.spacing
       ctx.beginPath()
       ctx.moveTo(0, line)
       ctx.lineTo(this.width, line)
@@ -49,7 +49,7 @@ export default class Grid extends GameComponent {
 
     // vertical
     for (let i = 0; i <= yLines; i++) {
-      const line = i * this.spaceWidth
+      const line = i * this.spacing
       ctx.beginPath()
       ctx.moveTo(line, 0)
       ctx.lineTo(line, this.height)

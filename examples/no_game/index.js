@@ -38,15 +38,16 @@ export default class Index extends Component {
     // const viewY = 100
 
     // const now = () => new Date().getTime()
+    /*
     const rand = (max) => Math.round(Math.random() * max)
 
     const obj = []
-    for (let i = 0; i < 4000; i++) {
+    for (let i = 0; i < 300; i++) {
       obj.push({
         x: rand(500),
         y: rand(500)
       })
-    }
+    }*/
 
     const render = (timestamp) => {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
@@ -60,10 +61,9 @@ export default class Index extends Component {
         timer = 0
       }
 
-      for (let i = 0; i < obj.length; i++) {
-        const d = obj[i]
+      for (let i = 0; i < 1000; i++) {
         ctx.save()
-        ctx.translate(d.x, d.y)
+        ctx.translate(i, i)
         ctx.drawImage(offcanvas, 0, 0)
         ctx.restore()
       }

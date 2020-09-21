@@ -9,18 +9,17 @@ export default class Sprite extends GameComponent {
     this.frames = frames
     this.fps = fps || 1
     this.index = startIndex || 0
-    this.lastTime = this.now()
+    this.timer = 0
     this.stop = false
   }
 
-  now = () => (new Date()).getTime()
-
-  update () {
+  update ({ deltaTime }) {
     if (this.stop) return
-    const pastTime = this.now() - this.lastTime
+
+    this.timer += deltaTime
     const ms = 1000 / this.fps
-    if (pastTime > ms) {
-      this.lastTime = this.now()
+    if (this.timer > ms) {
+      this.timer = 0
       if (this.index === this.frames.length - 1) {
         this.index = 0
       } else {
@@ -39,11 +38,11 @@ export default class Sprite extends GameComponent {
     return <Fragment>
       <div>
         <button onClick={() => {
-          this.lastTime = this.now()
+          this.timer = 0
           this.stop = !this.stop
         }}>{this.stop ? 'start' : 'stop'}</button>
         <button onClick={() => {
-          this.lastTime = this.now()
+          this.timer = 0
           this.index = this.startIndex || 0
           this.stop = false
         }}>Restart</button>

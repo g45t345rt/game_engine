@@ -4,13 +4,12 @@ import MainCamera from '../presets/mainCamera'
 import FpsCounter from '../presets/fpsCounter'
 import Scene from './scene'
 
-const { Editor, Transform } = Components
+const { Transform } = Components
 
 export default class Game extends GameObject {
   constructor () {
     super({ tag: 'game' })
 
-    this.addComponent(Editor)
     this.spawn(FpsCounter, { index: 1 })
 
     const cW = 300 // camera width
@@ -18,7 +17,7 @@ export default class Game extends GameObject {
 
     const scene = this.spawn(Scene)
 
-    const cams = this.spawn(GameObject, { id: 'cams' })
+    const cams = this.spawn(GameObject, { tag: 'cameras' })
     cams.addComponent(Transform)
 
     if (this.isClient) {

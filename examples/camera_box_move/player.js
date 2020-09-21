@@ -11,6 +11,12 @@ export default class Player extends GameObject {
     this.addComponent(Transform, { x: 100, y: 100 })
     this.addComponent(Box, { w: 50, h: 50 })
     this.addComponent(Keyboard)
+
+    const innerBox = new GameObject()
+    innerBox.addComponent(Transform, { x: -10, y: 0, attachedToParent: false })
+    innerBox.addComponent(Box, { w: 10, h: 10 })
+    this.spawn(innerBox)
+
     // this.addComponent(FollowMouse)
   }
 

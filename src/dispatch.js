@@ -45,7 +45,14 @@ export default class Dispatch {
   }
 
   dispatch (funcName, args) {
-    if (!this.canDispatch(funcName)) return
+    //if (!this.canDispatch(funcName)) return
+    //if (!this[funcName]) return false
     return this[funcName](args)
   }
+
+  update () { }
+  render () {}
+  editorRender () {}
+  onSpawn () {}
+  engineUpdate () {}
 }

@@ -66,6 +66,7 @@
   margin-bottom: 0;
 }
 
+/*
 .properties > div {
   display: flex;
   align-items: center;
@@ -78,7 +79,7 @@
 .properties > div > *:last-child {
   margin-right: 0;
 }
-
+*/
 .properties input {
   width: 100%;
   box-sizing: border-box;
@@ -88,6 +89,7 @@
   padding: 5px;
   border-radius: 2px;
   background-color: #d8d8d8;
+  word-break: break-word;
 }
 
 .properties > label {
@@ -98,4 +100,37 @@
 
 .properties > div > label {
   opacity: .7;
+}
+
+/* select */
+.select {
+  user-select: none;
+}
+
+.select .box {
+  border: thin solid #3c3c3c;
+  border-radius: 3px;
+  padding: 2px 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select .dropdown {
+  border: thin solid black;
+  border-radius: 3px;
+  max-height: 150px;
+  overflow-y: scroll;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+.select .dropdown .item {
+  padding: 2px 5px;
+}
+
+.select .dropdown .item:hover {
+  background-color: blue;
 }

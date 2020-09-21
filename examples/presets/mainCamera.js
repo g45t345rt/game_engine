@@ -10,8 +10,8 @@ class View extends GameObject {
 
   render (args) {
     const transform = this.getComponent(Transform)
-    args.offsetMatrix = transform.globalMatrix
-    this.gameObjectToRender.dispatch('render', args, { force: true })
+    const offsetMatrix = transform.matrix // send offsetMatrix with dispatch (don't populate args with offsetMatrix or it will affect all render dispatch)
+    this.gameObjectToRender.dispatch('render', { ctx: args.ctx, offsetMatrix })
   }
 }
 
@@ -24,7 +24,7 @@ export default class MainCamera extends GameObject {
     box.draw = false
 
     this.addComponent(Keyboard)
-    this.spawn(View, { gameObjectToRender, x: viewX, y: viewY, w, h, rX: w/2, rY: h/2 })
+    this.spawn(View, { gameObjectToRender, x: viewX, y: viewY, w, h, rX: w / 2, rY: h / 2 })
     //this.addComponent(MouseDrag)
   }
 
