@@ -44,8 +44,8 @@ fps.addComponent(DrawFPS)
 
 const game = new GameObject()
 game.addComponent(Inspector)
-game.addChild(mainCamera)
-game.addChild(fps)
-game.addChild(world)
+game.addChild(mainCamera, 'mainCamera')
+game.addChild(fps, 'fps')
+game.addChild(world, 'world')
 
 render(game)

@@ -78,15 +78,16 @@ export default class GameObject {
   }
 
   // recursive func to find child within the entire tree
-  findChild (condition, gameObject) {
+  findChilds (condition, gameObject) {
     if (!condition) condition = () => true
     let list = []
 
     const { childs } = gameObject || this // start from root
 
-    if (gameObject && condition(gameObject)) list = [child]
-    childs.forEach((gameObject) => {
-      list = [...list, ...this.findChild(condition, gameObject)]
+    if (gameObject && condition(gameObject)) list = [gameObject]
+    Object.keys(childs).forEach((key) => {
+      const go = childs[key]
+      list = [...list, ...this.findChilds(condition, go)]
     })
 
     return list

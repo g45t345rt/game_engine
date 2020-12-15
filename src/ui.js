@@ -19,17 +19,6 @@ function getElCache (el, key) {
   return el[CACHE_KEY][key]
 }
 
-/*
-function renderFunc (funcOrValue) {
-  if (typeof funcOrValue === 'function') {
-    const newValue = funcOrValue()
-    return renderFunc(newValue)
-  }
-
-  return funcOrValue
-}
-*/
-
 export function setElPosition (el, x, y) {
   el.style.top = `${y}px`
   el.style.left = `${x}px`
@@ -66,14 +55,10 @@ export function renderEl (el) {
   if (!cache) throw new Error(`Render func is not set. Use setElRender.`)
 
   const { func, html } = cache
-  const newValue = func()
+  const newValue = func(el)
   const currentValue = getElValue(el, html)
   // only change value if diff *** not necessary since I think dom does not set the same value
-  if (newValue !== currentValue) setElValue(el, newValue, html)
-}
-
-export function setEl (elements, func, ...args) {
-  valueToArray(elements).forEach((el) => func(el, ...args))
+  if (newValue && newValue !== currentValue) setElValue(el, newValue, html)
 }
 
 export function emptyEl (el) {
@@ -95,13 +80,80 @@ export function showEl (el) {
   }
 }
 
+export function toggleEl (el) {
+  if (el.style.display === 'none') showEl(el)
+  else hideEl(el)
+}
+
 export const newEl = (tag) => document.createElement(tag)
 
-export function createDraggableEl () {
-  const box = document.createElement('div')
+export function createTabEl () {
+  const box = newEl('div')
+
+  const tab = newEl('div')
+  tab.style.cursor = 'pointer'
+  tab.style.userSelect = 'none'
+
+  const container = newEl('div')
+
+  tab.addEventListener('click', () => {
+    toggleEl(container)
+  })
+
+  box.append(tab, container)
+
+  return {
+    box,
+    tab,
+    container
+  }
+}
+
+// items can be an Array or Object
+export function createSelectEl ({ items, getKey, getValue, onSelect } = {}) {
+  const select = newEl('select')
+
+  function getItem (key) {
+    if (Array.isArray(items)) return items.find((item) => getKey(item) === key)
+    return items[key]
+  }
+
+  function render () {
+    let keys = []
+    if (Array.isArray(items)) keys = items.map((item) => getKey(item))
+    else keys = Object.keys(items)
+
+    // check if item list changed
+    const optionValues = [...select.options].map((o) => o.value)
+    const sameChilds = keys.every((key) => optionValues.includes(key))
+
+    if (sameChilds) return
+
+    emptyEl(select)
+    keys.forEach((key) => {
+      const item = getItem(key)
+      const option = newEl('option')
+      option.text = typeof getValue === 'function' ? getValue(item) : key
+      option.value = key
+      select.add(option)
+    })
+  }
+
+  select.addEventListener('change', (e) => {
+    const option = e.target.selectedOptions[0]
+    const item = getItem(option.value)
+    if (onSelect) onSelect(item)
+  })
+
+  setElRender(select, render)
+  return select
+}
+
+export function createDraggableEl ({ onDragFinish } = {}) {
+  const box = newEl('div')
   box.style.position = 'fixed'
 
-  const dragArea = document.createElement('div')
+  const dragArea = newEl('div')
 
   let startX, startY
   let mouseDrag = false
@@ -119,6 +171,8 @@ export function createDraggableEl () {
     if (e.button === LEFT_CLICK) {
       box.style.userSelect = 'auto'
       mouseDrag = false
+
+      if (onDragFinish) onDragFinish({ x: e.clientX - startX, y: e.clientY - startY })
     }
   })
 
@@ -128,7 +182,7 @@ export function createDraggableEl () {
     }
   })
 
-  const container = document.createElement('div')
+  const container = newEl('div')
 
   box.append(dragArea, container)
 

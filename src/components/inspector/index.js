@@ -1,6 +1,18 @@
 import Component from '../component'
-import { newEl, setElValue, createDraggableEl, setElClass, setElRender, renderEl } from '../../ui'
+import { createSelectEl, newEl, setElValue, createDraggableEl, setElClass, setElRender, renderEl, createTabEl, setElPosition, emptyEl, hideEl } from '../../ui'
 import styles from './styles.css'
+
+function flexBoxTitle (titleValue, propEl) {
+  const box = newEl('div')
+  setElClass(box, styles.flexBox)
+
+  const title = newEl('div')
+  setElClass(box, styles.flexBoxTitle)
+  setElValue(title, titleValue)
+
+  box.append(title, propEl)
+  return box
+}
 
 export default class Inspector extends Component {
   constructor (options) {
@@ -10,47 +22,108 @@ export default class Inspector extends Component {
   }
 
   init () {
-    const { container, box, dragArea } = createDraggableEl()
+    // draggable inspector
+    const onDragFinish = ({ x, y }) => {
+      // save position
+      localStorage.setItem('inspector_pos', JSON.stringify({ x, y }))
+    }
+
+    const { container, box, dragArea } = createDraggableEl({ onDragFinish })
+    this.container = container
+
+    let boxPos = { x: 0, y: 0 }
+    try {
+      boxPos = JSON.parse(localStorage.getItem('inspector_pos'))
+    } catch { }
+    setElPosition(box, boxPos.x, boxPos.y)
     setElClass(container, styles.container)
     setElClass(box, styles.box)
     setElClass(dragArea, styles.dragArea)
 
     // title
     const title = newEl('div')
+    setElClass(title, styles.title)
     setElValue(title, 'Inspector')
 
     // total gameobjects
     const totalGameObjects = newEl('div')
-    setElValue(totalGameObjects, 'Total gameobjects')
+    setElRender(totalGameObjects, () => this.gameObject.findChilds().length)
+    const totalGoBox = flexBoxTitle('Total gameobjects', totalGameObjects)
+
+    // toggle play/stop loop
+    const toggleInput = newEl('input')
+    setElRender(toggleInput, () => {
+      return this.gameObject.canUpdate ? 'stop' : 'play'
+    })
+    toggleInput.type = 'button'
+    toggleInput.addEventListener('click', () => {
+      const { canUpdate } = this.gameObject
+      this.gameObject.canUpdate = !canUpdate
+      renderEl(toggleInput)
+    })
+
+    // reset game
+    const resetInput = newEl('input')
+    resetInput.type = 'button'
+    setElValue(resetInput, 'reset')
+
+    container.append(title, totalGoBox, toggleInput, resetInput)
+    this.setGameObjectTab(this.gameObject)
+
+    document.body.append(box)
+
+    // elements to be rendered on update
+    this.elements = { ...this.elements, totalGameObjects }
+  }
+
+  setGameObjectTab (objectToInspect) {
+    const gameObject = objectToInspect
+
+    if (this.gameObjectTab) this.container.removeChild(this.gameObjectTab)
+
+    // gameObject tab
+    const goTabEl = createTabEl()
+    setElClass(goTabEl.tab, styles.tab)
+    setElValue(goTabEl.tab, 'GameObject')
+    setElClass(goTabEl.container, styles.tabContent)
+
+    // select childs
+    const select = createSelectEl({
+      items: gameObject.childs,
+      onSelect: (item) => {
+        this.setGameObjectTab(item)
+      }
+    })
+
+    // goto parent button
+    const parentInput = newEl('input')
+    parentInput.type = 'button'
+    setElValue(parentInput, 'Go to parent')
+    parentInput.addEventListener('click', () => {
+      this.setGameObjectTab(gameObject.parent)
+    })
+    if (!gameObject.parent) hideEl(parentInput)
 
     // id
     const id = newEl('div')
-    setElRender(id, () => this.gameObject.id)
+    setElRender(id, () => gameObject.id)
+    const idBox = flexBoxTitle('id', id)
 
     // tag
     const tag = newEl('input')
     tag.type = 'text'
-    setElRender(tag, () => this.gameObject.tag)
+    setElRender(tag, () => gameObject.tag)
     tag.addEventListener('input', (e) => {
-      this.gameObject.tag = e.target.value
+      gameObject.tag = e.target.value
     })
 
-    // toggle play/stop loop
-    const toggleLoop = newEl('input')
-    setElRender(toggleLoop, () => {
-      return this.gameObject.canUpdate ? 'stop' : 'play'
-    })
-    toggleLoop.type = 'button'
-    toggleLoop.addEventListener('click', () => {
-      const { canUpdate } = this.gameObject
-      this.gameObject.canUpdate = !canUpdate
-      renderEl(toggleLoop)
-    })
+    const tagBox = flexBoxTitle('tag', tag)
 
-    container.append(title, totalGameObjects, id, tag, toggleLoop)
-    document.body.append(box)
+    goTabEl.container.append(select, parentInput, idBox, tagBox)
 
-    this.elements = { id, tag }
+    this.gameObjectTab = goTabEl.box
+    this.container.append(this.gameObjectTab)
+    this.elements = { ...this.elements, id, tag, select }
   }
 
   update (args) {
