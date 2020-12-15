@@ -1,3 +1,5 @@
+import 'normalize.css'
+
 import render from 'engine/render'
 import GameObject from 'engine/gameObject'
 import Camera from 'engine/components/camera'
@@ -5,6 +7,7 @@ import Transform from 'engine/components/transform'
 import Rect from 'engine/components/rect'
 import Grid from 'engine/components/grid'
 import DrawFPS from 'engine/components/drawFps'
+import Inspector from 'engine/components/inspector'
 
 const world = new GameObject({ autoDraw: false })
 world.addComponent(Transform)
@@ -40,6 +43,7 @@ fps.addComponent(Transform)
 fps.addComponent(DrawFPS)
 
 const game = new GameObject()
+game.addComponent(Inspector)
 game.addChild(mainCamera)
 game.addChild(fps)
 game.addChild(world)

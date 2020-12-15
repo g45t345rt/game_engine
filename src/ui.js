@@ -10,23 +10,25 @@ const checkElCacheObj = (el) => {
 }
 
 function setElCache (el, key, value) {
-  checkElCacheObj()
+  checkElCacheObj(el)
   el[CACHE_KEY][key] = value
 }
 
 function getElCache (el, key) {
-  checkElCacheObj()
+  checkElCacheObj(el)
   return el[CACHE_KEY][key]
 }
 
+/*
 function renderFunc (funcOrValue) {
   if (typeof funcOrValue === 'function') {
     const newValue = funcOrValue()
     return renderFunc(newValue)
   }
 
-  return renderFunc
+  return funcOrValue
 }
+*/
 
 export function setElPosition (el, x, y) {
   el.style.top = `${y}px`
@@ -38,18 +40,36 @@ export function setElClass (el, classes) {
 }
 
 const valueTags = ['INPUT', 'TEXTAREA']
-export function setElValue (el, value, html = false) {
-  if (valueTags.indexOf(el.tagName) !== -1) {
-    el.value = value
-    return
-  }
+function getTagValueKey (tag, html = false) {
+  if (valueTags.indexOf(tag) !== -1) return 'value'
+  if (html) return 'innerHTML'
+  return 'textContent'
+}
 
-  if (html) {
-    el.innerHTML = value
-    return
-  }
+export function setElValue (el, value, html) {
+  const key = getTagValueKey(el.tagName, html)
+  el[key] = value
+}
 
-  el.textContent = value
+export function getElValue (el, html) {
+  const key = getTagValueKey(el.tagName, html)
+  return el[key]
+}
+
+export function setElRender (el, func, html = false) {
+  setElCache(el, 'render', { func, html })
+  renderEl(el)
+}
+
+export function renderEl (el) {
+  const cache = getElCache(el, 'render')
+  if (!cache) throw new Error(`Render func is not set. Use setElRender.`)
+
+  const { func, html } = cache
+  const newValue = func()
+  const currentValue = getElValue(el, html)
+  // only change value if diff *** not necessary since I think dom does not set the same value
+  if (newValue !== currentValue) setElValue(el, newValue, html)
 }
 
 export function setEl (elements, func, ...args) {
@@ -57,7 +77,7 @@ export function setEl (elements, func, ...args) {
 }
 
 export function emptyEl (el) {
-  while(el.firstChild) {
+  while (el.firstChild) {
     el.removeChild(el.lastChild)
   }
 }
@@ -80,7 +100,7 @@ export const newEl = (tag) => document.createElement(tag)
 export function createDraggableEl () {
   const box = document.createElement('div')
   box.style.position = 'fixed'
-  
+
   const dragArea = document.createElement('div')
 
   let startX, startY

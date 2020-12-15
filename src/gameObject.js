@@ -77,6 +77,21 @@ export default class GameObject {
     }
   }
 
+  // recursive func to find child within the entire tree
+  findChild (condition, gameObject) {
+    if (!condition) condition = () => true
+    let list = []
+
+    const { childs } = gameObject || this // start from root
+
+    if (gameObject && condition(gameObject)) list = [child]
+    childs.forEach((gameObject) => {
+      list = [...list, ...this.findChild(condition, gameObject)]
+    })
+
+    return list
+  }
+
   removeChild (gameObject) {
     const key = Object.keys(this.childs).find((key) => this.childs[key].id === gameObject.id)
     if (key) delete this.childs[key]
