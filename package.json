@@ -1,0 +1,25 @@
+{
+  "name": "new-game-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "nanoid": "^3.1.20",
+    "parcel": "^1.12.4",
+    "transformation-matrix": "^2.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "single_camera": "parcel ./examples/single_camera/index.html",
+    "multiple_camera": "parcel ./examples/multiple_camera/index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "alias": {
+    "engine": "./src"
+  }
+}
