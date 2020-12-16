@@ -114,6 +114,21 @@ export function createTabEl ({ canToggle = true } = {}) {
   }
 }
 
+export function clampElPosition (el, { x, y, w, h }) {
+  const boxRect = el.getBoundingClientRect()
+
+  let nx = boxRect.x
+  let ny = boxRect.y
+
+  if (boxRect.x + boxRect.width >= w) nx = w - boxRect.width
+  if (boxRect.y + boxRect.height >= h) ny = h - boxRect.height
+
+  if (nx < x) nx = 0
+  if (ny < y) ny = 0
+
+  setElPosition(el, nx, ny)
+}
+
 // items can be an Array or Object
 export function createSelectEl ({ items, getKey, getValue, onSelect, noSelect, emptySelect } = {}) {
   const select = newEl('select')
@@ -174,7 +189,7 @@ export function createSelectEl ({ items, getKey, getValue, onSelect, noSelect, e
   return select
 }
 
-export function createDraggableEl ({ onDragFinish } = {}) {
+export function createDraggableEl ({ onDragFinish, clampToScreen = true } = {}) {
   const box = newEl('div')
   box.style.position = 'fixed'
 
@@ -204,8 +219,11 @@ export function createDraggableEl ({ onDragFinish } = {}) {
   document.addEventListener('mousemove', (e) => {
     if (mouseDrag) {
       setElPosition(box, e.clientX - startX, e.clientY - startY)
+      if (clampToScreen) clampElPosition(box, { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
     }
   })
+
+  document.addEventListener('mouseleave', () => mouseDrag = false)
 
   const container = newEl('div')
 
