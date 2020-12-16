@@ -29,19 +29,23 @@ export function setElClass (el, classes) {
 }
 
 const valueTags = ['INPUT', 'TEXTAREA']
-function getTagValueKey (tag, html = false) {
-  if (valueTags.indexOf(tag) !== -1) return 'value'
+function getTagValueKey (el, html = false) {
+  if (valueTags.indexOf(el.tagName) !== -1) {
+    if (el.type === 'checkbox') return 'checked'
+    return 'value'
+  }
+
   if (html) return 'innerHTML'
   return 'textContent'
 }
 
 export function setElValue (el, value, html) {
-  const key = getTagValueKey(el.tagName, html)
+  const key = getTagValueKey(el, html)
   el[key] = value
 }
 
 export function getElValue (el, html) {
-  const key = getTagValueKey(el.tagName, html)
+  const key = getTagValueKey(el, html)
   return el[key]
 }
 
@@ -87,18 +91,19 @@ export function toggleEl (el) {
 
 export const newEl = (tag) => document.createElement(tag)
 
-export function createTabEl () {
+export function createTabEl ({ canToggle = true } = {}) {
   const box = newEl('div')
 
   const tab = newEl('div')
-  tab.style.cursor = 'pointer'
   tab.style.userSelect = 'none'
 
   const container = newEl('div')
-
-  tab.addEventListener('click', () => {
-    toggleEl(container)
-  })
+  if (canToggle) {
+    tab.style.cursor = 'pointer'
+    tab.addEventListener('click', () => {
+      toggleEl(container)
+    })
+  }
 
   box.append(tab, container)
 
@@ -110,7 +115,7 @@ export function createTabEl () {
 }
 
 // items can be an Array or Object
-export function createSelectEl ({ items, getKey, getValue, onSelect } = {}) {
+export function createSelectEl ({ items, getKey, getValue, onSelect, emptySelect } = {}) {
   const select = newEl('select')
 
   function getItem (key) {
@@ -126,10 +131,16 @@ export function createSelectEl ({ items, getKey, getValue, onSelect } = {}) {
     // check if item list changed
     const optionValues = [...select.options].map((o) => o.value)
     const sameChilds = keys.every((key) => optionValues.includes(key))
-
     if (sameChilds) return
 
     emptyEl(select)
+
+    if (emptySelect) {
+      const emptyOption = newEl('option')
+      emptyOption.text = emptySelect
+      select.add(emptyOption)
+    }
+
     keys.forEach((key) => {
       const item = getItem(key)
       const option = newEl('option')

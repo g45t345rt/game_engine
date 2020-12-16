@@ -1,0 +1,102 @@
+@import url('./font.css');
+.inspector {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f7f7f7;
+  min-width: 250px;
+  padding: 5px;
+  border-radius: 5px;
+  border: thin solid #e4e4e4;
+}
+
+.dragArea {
+  background: #e4e4e4;
+  height: 25px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.dragArea::after {
+  content: '....';
+  display: flex;
+  justify-content: center;
+  color: #363636;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.container {
+  border-radius: 5px;
+}
+
+.tab {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  padding: 8px 10px;
+  color: #363636;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabContent {
+  padding: 5px;
+  background-color: #e4e4e4;
+}
+
+.tabContent > * {
+  margin-bottom: 5px;
+}
+
+.tabContent > *:last-child {
+  margin-bottom: 0;
+}
+
+.property {
+  display: flex;
+  align-items: center;
+}
+
+.propertyKey {
+  margin-right: 5px;
+  padding: 3px 6px;
+  border: thin solid #d8d8d8;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.propertyValue {
+
+}
+
+.noDefinition {
+  font-size: 12px;
+  background-color: #b4d5f9;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.inspector input[type='button'] {
+  padding: 3px 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: white;
+  font-size: 14px;
+  border: thin solid #d0d0d0;
+  cursor: pointer;
+  outline: none;
+  transition: all .25s;
+}
+
+.inspector input[type='button']:hover {
+  border: thin solid #929292;
+}
+
+.inspector input[type='text'], .inspector select {
+  border-radius: 3px;
+  border: thin solid #a5a5a5;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}

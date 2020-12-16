@@ -7,7 +7,7 @@ import Transform from 'engine/components/transform'
 import Rect from 'engine/components/rect'
 import Grid from 'engine/components/grid'
 import DrawFPS from 'engine/components/drawFps'
-import Inspector from 'engine/components/inspector'
+import Inspector from 'engine/inspector'
 
 const world = new GameObject({ autoDraw: false })
 world.addComponent(Transform)
@@ -43,9 +43,10 @@ fps.addComponent(Transform)
 fps.addComponent(DrawFPS)
 
 const game = new GameObject()
-game.addComponent(Inspector)
 game.addChild(mainCamera, 'mainCamera')
 game.addChild(fps, 'fps')
 game.addChild(world, 'world')
 
-render(game)
+const inspector = new Inspector(game)
+render(game, (args) => inspector.update(args))
+

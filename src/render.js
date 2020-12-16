@@ -1,4 +1,4 @@
-export default function (root) {
+export default function (root, cb) {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
 
@@ -18,6 +18,7 @@ export default function (root) {
     const args = { ctx, timestamp, deltaTime }
     root._update(args)
     root._draw(args)
+    if (typeof cb === 'function') cb(args)
 
     deltaTime = timestamp - lastTime
     lastTime = timestamp
