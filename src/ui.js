@@ -62,7 +62,7 @@ export function renderEl (el) {
   const newValue = func(el)
   const currentValue = getElValue(el, html)
   // only change value if diff *** not necessary since I think dom does not set the same value
-  if (newValue && newValue !== currentValue) setElValue(el, newValue, html)
+  if (newValue !== null && newValue !== undefined && newValue !== currentValue) setElValue(el, newValue, html)
 }
 
 export function emptyEl (el) {
@@ -115,7 +115,7 @@ export function createTabEl ({ canToggle = true } = {}) {
 }
 
 // items can be an Array or Object
-export function createSelectEl ({ items, getKey, getValue, onSelect, emptySelect } = {}) {
+export function createSelectEl ({ items, getKey, getValue, onSelect, noSelect, emptySelect } = {}) {
   const select = newEl('select')
 
   function getItem (key) {
@@ -123,10 +123,24 @@ export function createSelectEl ({ items, getKey, getValue, onSelect, emptySelect
     return items[key]
   }
 
+  let noData = false
   function render () {
     let keys = []
     if (Array.isArray(items)) keys = items.map((item) => getKey(item))
     else keys = Object.keys(items)
+
+    if (emptySelect && keys.length === 0 && select.options.length === 0) {
+      const emptyOption = newEl('option')
+      emptyOption.disabled = true
+      emptyOption.selected = true
+      emptyOption.text = emptySelect
+      select.add(emptyOption)
+      noData = true
+    } else {
+      noData = false
+    }
+
+    if (noData) return
 
     // check if item list changed
     const optionValues = [...select.options].map((o) => o.value)
@@ -135,10 +149,10 @@ export function createSelectEl ({ items, getKey, getValue, onSelect, emptySelect
 
     emptyEl(select)
 
-    if (emptySelect) {
-      const emptyOption = newEl('option')
-      emptyOption.text = emptySelect
-      select.add(emptyOption)
+    if (noSelect) {
+      const noOption = newEl('option')
+      noOption.text = noSelect
+      select.add(noOption)
     }
 
     keys.forEach((key) => {
@@ -201,5 +215,49 @@ export function createDraggableEl ({ onDragFinish } = {}) {
     box,
     dragArea,
     container
+  }
+}
+
+export function createTableEl ({ rows, columns, header = true }) {
+  const table = newEl('table')
+  const body = newEl('tbody')
+
+  const elRows = []
+
+  if (header) {
+    const row = newEl('tr')
+
+    const elCells = []
+    for (let c = 0; c < columns; c++) {
+      const cell = newEl('th')
+
+      elCells.push(cell)
+      row.append(cell)
+    }
+
+    elRows.push(elCells)
+    body.append(row)
+  }
+
+  for (let r = 0; r < rows; r++) {
+    let row = newEl('tr')
+
+    const elCells = []
+    for (let c = 0; c < columns; c++) {
+      const cell = newEl('td')
+
+      elCells.push(cell)
+      row.appendChild(cell)
+    }
+
+    elRows.push(elCells)
+    body.append(row)
+  }
+
+  table.append(body)
+
+  return {
+    rows: elRows,
+    table
   }
 }

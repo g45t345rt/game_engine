@@ -27,3 +27,17 @@ export const drawStrokeRect = (ctx, { x = 0, y = 0, w, h, lw, stroke = 'outlined
 
   ctx.strokeRect(x, y, w, h)
 }
+
+export function setLocalStorage (key, obj) {
+  localStorage.setItem(key, JSON.stringify(obj))
+}
+
+export function getLocalStorage (key, defaultIfNullOrError) {
+  try {
+    const data = localStorage.getItem(key)
+    if (!data) return defaultIfNullOrError
+    return JSON.parse(data)
+  } catch {
+    return defaultIfNullOrError
+  }
+}

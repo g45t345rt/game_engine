@@ -100,3 +100,21 @@
   width: 100%;
   font-size: 14px;
 }
+
+.inspector table {
+  width: 100%;
+  font-size: 14px;
+}
+
+.inspector th {
+  text-align: left;
+}
+
+.divider {
+  height: 1px;
+  width: 100%;
+  background-color: #f7f7f7;
+  margin: 5px 0;
+  margin-left: -5px;
+  padding-right: 10px;
+}
