@@ -1,4 +1,9 @@
 @import url('./font.css');
+
+input {
+  box-sizing: border-box;
+}
+
 .inspector {
   font-family: 'Roboto', sans-serif;
   background-color: #f7f7f7;
@@ -66,13 +71,9 @@
   font-size: 14px;
 }
 
-.propertyValue {
-
-}
-
 .noDefinition {
   font-size: 12px;
-  background-color: #b4d5f9;
+  border: thin dashed #c5c5c5;
   padding: 5px 10px;
   border-radius: 5px;
 }
@@ -111,7 +112,7 @@
 }
 
 .divider {
-  height: 1px;
+  height: 5px;
   width: 100%;
   background-color: #f7f7f7;
   margin: 5px 0;

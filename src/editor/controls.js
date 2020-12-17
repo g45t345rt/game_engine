@@ -1,5 +1,5 @@
 import { getLocalStorage, setLocalStorage } from '../helpers'
-import { setElClass, createTabEl, setElValue, newEl, createDraggableEl, setElPosition } from '../ui'
+import { setElClass, createTabEl, setElValue, newEl, createDraggableEl, setElPosition, getElValue, emptyEl } from '../ui'
 import styles from './styles.css'
 
 export function inspectorTab (options) {
@@ -37,6 +37,99 @@ export function dividerEl () {
   const el = newEl('div')
   setElClass(el, styles.divider)
   return el
+}
+
+export function mouseMoveEditEl (el, { onChange } = {}) {
+  const lastCursor = document.body.style.cursor
+  let mouseDown = false
+  let startX = 0
+  let startValue
+
+  document.addEventListener('mousemove', (e) => {
+    if (mouseDown) {
+      const newValue = startValue + (e.clientX - startX)
+      console.log(newValue)
+      setElValue(el, newValue)
+      if (typeof onChange === 'function') onChange(newValue)
+    }
+  })
+
+  el.addEventListener('mousedown', (e) => {
+    startValue = new Number(getElValue(el))
+    startX = e.clientX
+    if (e.button === 0) {
+      mouseDown = true
+      el.style.userSelect = 'none'
+      document.body.style.cursor = 'crosshair'
+    }
+  })
+
+  document.addEventListener('mouseup', () => {
+    if (mouseDown) {
+      mouseDown = false
+      el.style.userSelect = 'auto'
+      document.body.style.cursor = lastCursor
+    }
+  })
+}
+
+export function editableEl (el, { onChange, changeOnEveryInput = true, type = 'number' }) {
+  mouseMoveEditEl(el, { onChange })
+  const editInput = newEl('input')
+  editInput.type = type
+  editInput.style.width = '70px'
+  editInput.style.position = 'absolute'
+
+  let editing = false
+  let lastValue
+  const lastDisplay = el.style.display
+  const startEdit = () => {
+    el.style.display = 'block'
+    editing = true
+    lastValue = getElValue(el)
+    emptyEl(el)
+    el.append(editInput)
+    editInput.focus()
+    setElValue(editInput, lastValue)
+  }
+
+  const resetEdit = () => {
+    el.style.display = lastDisplay
+    editing = false
+    setElValue(el, lastValue)
+    if (typeof onChange === 'function') onChange(lastValue)
+  }
+
+  const saveEdit = () => {
+    el.style.display = lastDisplay
+    editing = false
+    const value = getElValue(editInput)
+    setElValue(el, value)
+    if (typeof onChange === 'function') onChange(value)
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!editing) return
+    // outside click
+    if (!e.target.isEqualNode(editInput)) saveEdit()
+  })
+
+  // trigger onChange on every key input
+  if (changeOnEveryInput) {
+    editInput.addEventListener('input', (e) => {
+      if (typeof onChange === 'function') onChange(e.target.value)
+    })
+  }
+
+  editInput.addEventListener('keydown', (e) => {
+    // cancel edit
+    if (e.code === 'Escape') resetEdit()
+
+    // save edit
+    if (e.code === 'Enter') saveEdit()
+  })
+
+  el.addEventListener('dblclick', startEdit)
 }
 
 export function windowEl ({ title }) {
