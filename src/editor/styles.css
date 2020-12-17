@@ -111,6 +111,10 @@ input {
   text-align: left;
 }
 
+.inspector .active {
+  border: thin solid #009fff;
+}
+
 .divider {
   height: 5px;
   width: 100%;

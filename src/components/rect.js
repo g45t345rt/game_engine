@@ -1,6 +1,8 @@
 import { typeBoolOrDefault, typeNumber } from '../typeCheck'
 import Component from './component'
 import Transform from './transform'
+import { newEl, createTableEl, setElValue, setElRender } from '../ui'
+import { editableEl } from '../editor/controls'
 
 export const OriginType = {
   rotation: 'rotation',
@@ -76,5 +78,26 @@ export default class Rect extends Component {
     // Draw child point
     ctx.fillStyle = 'yellow'
     ctx.fillRect(cx - (ps / 2), cy - (ps / 2), ps, ps)
+  }
+
+  inspector () {
+    const container = newEl('div')
+
+    const { rows, table } = createTableEl({ rows: 2, columns: 3 })
+
+    setElValue(rows[0][1], 'W')
+    setElValue(rows[0][2], 'H')
+
+    setElValue(rows[1][0], 'Size')
+    setElRender(rows[1][1], () => this.w)
+    editableEl(rows[1][1], { onChange: (v) => this.w = v })
+    setElRender(rows[1][2], () => this.h)
+    editableEl(rows[1][2], { onChange: (v) => this.h = v })
+
+    container.append(table)
+
+    return {
+      container
+    }
   }
 }

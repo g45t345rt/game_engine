@@ -48,13 +48,14 @@ export function mouseMoveEditEl (el, { onChange } = {}) {
   document.addEventListener('mousemove', (e) => {
     if (mouseDown) {
       const newValue = startValue + (e.clientX - startX)
-      console.log(newValue)
       setElValue(el, newValue)
       if (typeof onChange === 'function') onChange(newValue)
     }
   })
 
   el.addEventListener('mousedown', (e) => {
+    if (!e.target.isEqualNode(el)) return // don't trigger if inside a child
+
     startValue = new Number(getElValue(el))
     startX = e.clientX
     if (e.button === 0) {
@@ -82,33 +83,29 @@ export function editableEl (el, { onChange, changeOnEveryInput = true, type = 'n
 
   let editing = false
   let lastValue
-  const lastDisplay = el.style.display
   const startEdit = () => {
-    el.style.display = 'block'
     editing = true
-    lastValue = getElValue(el)
-    emptyEl(el)
-    el.append(editInput)
+    el.prepend(editInput)
     editInput.focus()
+    lastValue = getElValue(el)
     setElValue(editInput, lastValue)
   }
 
   const resetEdit = () => {
-    el.style.display = lastDisplay
+    el.removeChild(editInput)
     editing = false
-    setElValue(el, lastValue)
     if (typeof onChange === 'function') onChange(lastValue)
   }
 
   const saveEdit = () => {
-    el.style.display = lastDisplay
+    el.removeChild(editInput)
     editing = false
     const value = getElValue(editInput)
     setElValue(el, value)
     if (typeof onChange === 'function') onChange(value)
   }
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener('mousedown', (e) => {
     if (!editing) return
     // outside click
     if (!e.target.isEqualNode(editInput)) saveEdit()

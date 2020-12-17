@@ -5,9 +5,6 @@ export default class Editor {
   constructor (gameRoot) {
     const inspector = createInspector(gameRoot)
     const hierarchy = createHierarchy(gameRoot)
-    this.window = {
-      inspector
-    }
   }
 
 
