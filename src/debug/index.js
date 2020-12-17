@@ -1,10 +1,12 @@
 import createInspector from './tools/inspector'
 import createHierarchy from './tools/hierarchy'
+import createMenu from './tools/menu'
 
 export function useDebugTools (renderer) {
   const { root } = renderer
-  createInspector(root)
-  createHierarchy(root)
+  const inspector = createInspector(root)
+  const hierarchy = createHierarchy(root)
+  createMenu({ inspector, hierarchy })
 
   renderer.addEventListener('render', (args) => {
 

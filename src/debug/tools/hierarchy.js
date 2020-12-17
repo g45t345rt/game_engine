@@ -28,4 +28,6 @@ export default function createHierarchy (gameObject) {
   const tree = treeView(gameObject)
   hierarchy.mainTab.container.append(tree)
   document.body.append(hierarchy.box)
+
+  return hierarchy
 }

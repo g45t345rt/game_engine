@@ -118,6 +118,7 @@ export default function createInspector (gameRoot) {
 
   document.body.append(inspector.box)
 
+  return inspector
   // elements to be rendered on update
   //this.elements = { ...this.elements, totalGameObjects }
 }
