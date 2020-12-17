@@ -1,10 +1,10 @@
 import { scale, rotate, translate, compose } from 'transformation-matrix'
-import { dividerEl, editableEl, mouseMoveEditEl } from '../editor/controls'
+import { dividerEl, editableEl } from '../editor/controls'
 import { typeNumberOrDefault } from '../typeCheck'
 import { createTableEl, newEl, setElRender, setElValue } from '../ui'
-import Component from './component'
+import Component from '../component'
 
-export default class Transform extends Component {
+export class Transform extends Component {
   constructor (options = {}) {
     super(options)
 
@@ -177,3 +177,5 @@ export default class Transform extends Component {
     }
   }
 }
+
+export default Transform

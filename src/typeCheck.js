@@ -22,3 +22,18 @@ export const typeFuncOrDefault = (value, defaultValue) => isTypeOrDefault('funct
 
 export const typeObject = (value) => isType('object', value)
 export const typeObjectOrDefault = (value, defaultValue) => isTypeOrDefault('object', value, defaultValue)
+
+export default {
+  isType,
+  isTypeOrDefault,
+  typeString,
+  typeStringOrDefault,
+  typeBool,
+  typeBoolOrDefault,
+  typeNumber,
+  typeNumberOrDefault,
+  typeFunc,
+  typeFuncOrDefault,
+  typeObject,
+  typeObjectOrDefault
+}

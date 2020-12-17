@@ -1,8 +1,8 @@
 import { typeNumberOrDefault } from '../typeCheck'
-import Component from './component'
+import Component from '../component'
 import Transform from './transform'
 
-export default class DrawFPS extends Component {
+export class DrawFPS extends Component {
   constructor (options) {
     super(options)
     this.padding = typeNumberOrDefault(options.padding, 5)
@@ -41,3 +41,5 @@ export default class DrawFPS extends Component {
     ctx.fillText(text, this.padding, this.padding)
   }
 }
+
+export default DrawFPS

@@ -1,8 +1,8 @@
 import { typeNumber, typeNumberOrDefault, typeStringOrDefault } from '../typeCheck'
 import Rect from './rect'
-import Component from './component'
+import Component from '../component'
 
-export default class Grid extends Component {
+export class Grid extends Component {
   constructor (options) {
     super(options)
 

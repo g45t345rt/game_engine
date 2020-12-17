@@ -29,11 +29,11 @@ export function isMouseDown (key) {
 /* Keyboard */
 let keyDowns = {}
 function onKeyDown (e) {
-  this.keyDowns[e.code] = true
+  keyDowns[e.code] = true
 }
 
 function onKeyUp (e) {
-  delete this.keyDowns[e.code]
+  delete keyDowns[e.code]
 }
 
 function clearKeys () {
@@ -54,7 +54,7 @@ export function isEveryKeyDown (keys) {
 }
 
 export function isOnlyOneKeyDown (key) {
-  return keyDowns.length === 1 && this.keyDowns.includes(key)
+  return keyDowns.length === 1 && keyDowns.includes(key)
 }
 
 export default {

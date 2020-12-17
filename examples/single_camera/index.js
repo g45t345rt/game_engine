@@ -1,5 +1,6 @@
 import 'normalize.css'
 
+/*
 import render from 'engine/render'
 import GameObject from 'engine/gameObject'
 import Camera from 'engine/components/camera'
@@ -7,7 +8,12 @@ import Transform from 'engine/components/transform'
 import Rect from 'engine/components/rect'
 import Grid from 'engine/components/grid'
 import DrawFPS from 'engine/components/drawFps'
-import Editor from 'engine/editor'
+import Editor from 'engine/editor'*/
+
+import { GameObject, render, Editor, components, Input } from 'gemer'
+
+//import { Transform, Rect, Grid, Camera, DrawFPS } from 'gemer/components'
+const { Transform, Rect, Grid, Camera, DrawFPS } = components
 
 const world = new GameObject({ autoDraw: false })
 world.addComponent(Transform)

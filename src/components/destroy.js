@@ -1,6 +1,6 @@
-import Component from './component'
+import Component from '../component'
 
-export default class LifeSpan extends Component {
+export class Destroy extends Component {
   constructor (options = {}) {
     super(options)
     this.lifeSpan = typeNumberOrDefault(options.lifeSpan, 1000)

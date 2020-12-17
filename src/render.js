@@ -1,4 +1,4 @@
-export default function (root, cb) {
+export function render (root, cb) {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
 
@@ -28,3 +28,5 @@ export default function (root, cb) {
   requestAnimationFrame(render)
   document.body.append(canvas)
 }
+
+export default render

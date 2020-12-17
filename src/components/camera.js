@@ -1,8 +1,8 @@
 import { typeObject } from '../typeCheck'
-import Component from './component'
+import Component from '../component'
 import Rect from './rect'
 
-export default class Camera extends Component {
+export class Camera extends Component {
   constructor (options) {
     super(options)
 
@@ -25,3 +25,5 @@ export default class Camera extends Component {
     this.render._draw({ ...args, forceDraw: true })
   }
 }
+
+export default Camera

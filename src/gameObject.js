@@ -1,8 +1,8 @@
 import { callFuncObjects } from './helpers'
-import { typeBoolOrDefault, typeNumberOrDefault, typeStringOrDefault } from './typeCheck'
+import { typeBoolOrDefault, typeStringOrDefault } from './typeCheck'
 import { nanoid } from 'nanoid'
 
-export default class GameObject {
+export class GameObject {
   constructor (options = {}) {
     this.id = nanoid(10)
     this.tag = typeStringOrDefault(options.tag, null)
@@ -129,3 +129,5 @@ export default class GameObject {
     if (this.components[name]) delete this.components[name]
   }
 }
+
+export default GameObject

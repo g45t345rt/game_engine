@@ -1,9 +1,14 @@
 {
-  "name": "game_engine",
+  "name": "gemer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "source": "./src/index.js",
+  "main": "docs/release/gemer.js",
+  "umd:main": "docs/release/gemer.umd.js",
+  "module": "docs/release/gemer.m.js",
+  "esmodule": "docs/release/gemer.modern.js",
   "dependencies": {
+    "microbundle": "^0.12.4",
     "nanoid": "^3.1.20",
     "normalize.css": "^8.0.1",
     "transformation-matrix": "^2.5.0"
@@ -18,12 +23,14 @@
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "microbundle",
+    "box_move": "parcel ./examples/box_move/index.html",
     "single_camera": "parcel ./examples/single_camera/index.html",
     "multiple_camera": "parcel ./examples/multiple_camera/index.html"
   },
   "author": "",
   "license": "ISC",
   "alias": {
-    "engine": "./src"
+    "gemer": "./src"
   }
 }

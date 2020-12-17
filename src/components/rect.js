@@ -1,29 +1,29 @@
-import { typeBoolOrDefault, typeNumber } from '../typeCheck'
-import Component from './component'
+import { typeNumber } from '../typeCheck'
+import Component from '../component'
 import Transform from './transform'
 import { newEl, createTableEl, setElValue, setElRender } from '../ui'
 import { editableEl } from '../editor/controls'
 
-export const OriginType = {
-  rotation: 'rotation',
-  position: 'position',
-  child: 'child'
-}
-
-export const Origin = {
-  topLeft: { x: 0, y: 0 },
-  topRight: { x: 0, y: 1 },
-  bottomLeft: { x: 1, y: 0 },
-  bottomRight: { x: 1, y: 1 },
-  center: { x: .5, y: .5 }
-}
-
-export default class Rect extends Component {
+export class Rect extends Component {
   constructor (options = {}) {
     super(options)
 
     this.w = typeNumber(options.w) // width
     this.h = typeNumber(options.h) // height
+  }
+
+  static Origin = {
+    topLeft: { x: 0, y: 0 },
+    topRight: { x: 0, y: 1 },
+    bottomLeft: { x: 1, y: 0 },
+    bottomRight: { x: 1, y: 1 },
+    center: { x: .5, y: .5 }
+  }
+
+  static OriginType = {
+    rotation: 'rotation',
+    position: 'position',
+    child: 'child'
   }
 
   init () {
@@ -101,3 +101,5 @@ export default class Rect extends Component {
     }
   }
 }
+
+export default Rect

@@ -1,6 +1,6 @@
-import { typeBoolOrDefault } from "../typeCheck"
+import { typeBoolOrDefault } from './typeCheck'
 
-export default class Component {
+export class Component {
   constructor (options = {}) {
     this.enabled = typeBoolOrDefault(options.enabled, true)
     this.canDraw = typeBoolOrDefault(options.canDraw, true)
@@ -25,3 +25,5 @@ export default class Component {
     if (typeof this.draw === 'function') this.draw(args)
   }
 }
+
+export default Component

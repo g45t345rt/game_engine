@@ -1,7 +1,7 @@
-import Component from './component'
+import Component from '../component'
 import { typeFuncOrDefault, typeNumberOrDefault } from '../typeCheck'
 
-export default class Tween extends Component {
+export class Tween extends Component {
   constructor (options = {}) {
     super(options)
 
