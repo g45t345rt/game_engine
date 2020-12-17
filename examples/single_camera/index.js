@@ -1,16 +1,6 @@
 import 'normalize.css'
 
-/*
-import render from 'engine/render'
-import GameObject from 'engine/gameObject'
-import Camera from 'engine/components/camera'
-import Transform from 'engine/components/transform'
-import Rect from 'engine/components/rect'
-import Grid from 'engine/components/grid'
-import DrawFPS from 'engine/components/drawFps'
-import Editor from 'engine/editor'*/
-
-import { GameObject, render, Editor, components, Input } from 'gemer'
+import { GameObject, Renderer, components, useDebugTools } from 'gemer'
 
 //import { Transform, Rect, Grid, Camera, DrawFPS } from 'gemer/components'
 const { Transform, Rect, Grid, Camera, DrawFPS } = components
@@ -53,6 +43,10 @@ game.addChild(mainCamera, 'mainCamera')
 game.addChild(fps, 'fps')
 game.addChild(world, 'world')
 
-const editor = new Editor(game)
-render(game, (args) => editor.update(args))
+const renderer = new Renderer()
+renderer.render(game)
+
+const dev = true // mocking
+if (dev) useDebugTools(renderer)
+
 

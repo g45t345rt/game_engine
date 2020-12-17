@@ -1,6 +1,6 @@
 import 'normalize.css'
 
-import { GameObject, render, components, Editor } from 'gemer'
+import { GameObject, components, Renderer, useDebugTools } from 'gemer'
 import Box from './box'
 
 const { Transform, Rect } = components
@@ -10,5 +10,8 @@ box.addComponent(Transform)
 box.addComponent(Rect, { w: 50, h: 50 })
 box.addComponent(Box)
 
-new Editor(box)
-render(box)
+const renderer = new Renderer()
+renderer.render(box)
+
+const dev = true // mocking
+if (dev) useDebugTools(renderer)

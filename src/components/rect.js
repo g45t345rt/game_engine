@@ -2,7 +2,7 @@ import { typeNumber } from '../typeCheck'
 import Component from '../component'
 import Transform from './transform'
 import { newEl, createTableEl, setElValue, setElRender } from '../ui'
-import { editableEl } from '../editor/controls'
+import { editableEl } from '../debug/controls'
 
 export class Rect extends Component {
   constructor (options = {}) {
@@ -58,7 +58,7 @@ export class Rect extends Component {
     ctx.scale(1, -1)
   }
 
-  draw ({ ctx }) {
+  debugDraw ({ ctx }) {
     const { ox, oy, rx, ry, cx, cy } = this.getComponent(Transform)
 
     // Draw rect border

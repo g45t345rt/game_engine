@@ -1,7 +1,7 @@
 ### GEMER - Game Engine
 
 Open source javascript game engine, object tree with component/script system
-Includes debug tools like an inspector without the use of an editor (use you own)
+Includes debug tools like an inspector without the use of an editor (use you own text editor)
 
 ##### Install project dependencies with NPM
 `npm run install`

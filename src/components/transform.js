@@ -1,5 +1,5 @@
 import { scale, rotate, translate, compose } from 'transformation-matrix'
-import { dividerEl, editableEl } from '../editor/controls'
+import { dividerEl, editableEl } from '../debug/controls'
 import { typeNumberOrDefault } from '../typeCheck'
 import { createTableEl, newEl, setElRender, setElValue } from '../ui'
 import Component from '../component'

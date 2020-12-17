@@ -1,5 +1,5 @@
 import { Component, components, Input } from 'gemer'
-import { editableEl } from '../../src/editor/controls'
+import { editableEl } from '../../src/debug/controls'
 import { createTableEl, newEl, setElValue, setElRender } from '../../src/ui'
 const { Rect, Transform } = components
 
