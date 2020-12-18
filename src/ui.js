@@ -198,6 +198,11 @@ export function createDraggableEl ({ onDragFinish, clampToScreen = true } = {}) 
   let startX, startY
   let mouseDrag = false
   const LEFT_CLICK = 0
+
+  function clampBoxToScreen() {
+    clampElPosition(box, { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+  }
+  
   dragArea.addEventListener('mousedown', (e) => {
     if (e.button === LEFT_CLICK && !mouseDrag) { // left click
       mouseDrag = true
@@ -219,11 +224,13 @@ export function createDraggableEl ({ onDragFinish, clampToScreen = true } = {}) 
   document.addEventListener('mousemove', (e) => {
     if (mouseDrag) {
       setElPosition(box, e.clientX - startX, e.clientY - startY)
-      if (clampToScreen) clampElPosition(box, { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+      if (clampToScreen) clampBoxToScreen()
     }
   })
 
   document.addEventListener('mouseleave', () => mouseDrag = false)
+
+  window.addEventListener('resize', clampBoxToScreen)
 
   const container = newEl('div')
 
