@@ -1,0 +1,19 @@
+.property {
+  display: flex;
+  align-items: center;
+}
+
+.propertyKey {
+  margin-right: 5px;
+  padding: 3px 6px;
+  border: thin solid #d8d8d8;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.noDefinition {
+  font-size: 12px;
+  border: thin dashed #c5c5c5;
+  padding: 5px 10px;
+  border-radius: 5px;
+}

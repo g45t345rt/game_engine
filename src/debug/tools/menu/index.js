@@ -1,5 +1,5 @@
-import { hideEl, newEl, setElClass, setElValue, showEl } from '../../ui'
-import styles from '../styles.css'
+import { hideEl, newEl, setElClass, setElValue, showEl } from '../../../ui'
+import styles from './styles.css'
 
 function checkableItem (title, el) {
   const item = newEl('div')

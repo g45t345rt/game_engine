@@ -2,35 +2,33 @@ import { getLocalStorage, setLocalStorage } from '../helpers'
 import { setElClass, createTabEl, setElValue, newEl, createDraggableEl, setElPosition, getElValue, emptyEl } from '../ui'
 import styles from './styles.css'
 
-export function inspectorTab (options) {
-  const { title, ...restOptions } = options
-  const el = createTabEl(restOptions)
+export function windowTabEl (options) {
+  const tab = createTabEl(options)
+  setElClass(tab.head, styles.tabHead)
+  setElClass(tab.container, styles.tabContent)
 
-  const elTitle = newEl('div')
-  setElValue(elTitle, title)
-  el.tab.append(elTitle)
+  const title = newEl('div')
+  tab.head.append(title)
+  tab.title = title
 
-  setElClass(el.tab, styles.tab)
-  setElClass(el.container, styles.tabContent)
-
-  return el
+  return tab
 }
 
-export function checkableInspectorTab (options) {
-  const { onCheck, ...restOptions } = options
-  const obj = inspectorTab(restOptions)
+export function checkableWindowTabEl (options = {}) {
+  const { onChecked } = options 
+  const tab = windowTabEl(options)
 
   const checkbox = newEl('input')
   checkbox.type = 'checkbox'
   checkbox.addEventListener('click', (e) => {
     e.stopPropagation()
-    if (onCheck) onCheck(e.target.checked)
+    if (onChecked) onChecked(e.target.checked)
   })
 
-  obj.checkbox = checkbox
-  obj.tab.append(checkbox)
+  tab.head.append(checkbox)
+  tab.checkbox = checkbox
 
-  return obj
+  return tab
 }
 
 export function dividerEl () {
@@ -129,26 +127,24 @@ export function editableEl (el, { onChange, changeOnEveryInput = true, type = 'n
   el.addEventListener('dblclick', startEdit)
 }
 
-export function windowEl ({ title }) {
-  const posKey = `${title.toLowerCase()}_pos`
+export function windowEl (key) {
+  const posKey = `${key}_pos`
   const onDragFinish = ({ x, y }) => {
     setLocalStorage(posKey, { x, y }) // save position
   }
 
-  const { container, box, dragArea } = createDraggableEl({ onDragFinish })
+  const draggable = createDraggableEl({ onDragFinish })
 
   let boxPos = getLocalStorage(posKey, { x: 0, y: 0 })
-  setElPosition(box, boxPos.x, boxPos.y)
-  setElClass(container, styles.container)
-  setElClass(box, styles.inspector)
-  setElClass(dragArea, styles.dragArea)
+  setElPosition(draggable.box, boxPos.x, boxPos.y)
 
-  const mainTab = inspectorTab({ title })
+  setElClass(draggable.container, styles.container)
+  setElClass(draggable.box, styles.window)
+  setElClass(draggable.dragArea, styles.dragArea)
 
-  container.append(mainTab.box)
-  return {
-    container,
-    box,
-    mainTab
-  }
+  const windowTab = windowTabEl()
+  draggable.windowTab = windowTab
+
+  draggable.container.append(windowTab.box)
+  return draggable
 }

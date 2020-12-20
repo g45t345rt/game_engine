@@ -94,22 +94,22 @@ export const newEl = (tag) => document.createElement(tag)
 export function createTabEl ({ canToggle = true } = {}) {
   const box = newEl('div')
 
-  const tab = newEl('div')
-  tab.style.userSelect = 'none'
+  const head = newEl('div')
+  head.style.userSelect = 'none'
 
   const container = newEl('div')
   if (canToggle) {
-    tab.style.cursor = 'pointer'
-    tab.addEventListener('click', () => {
+    head.style.cursor = 'pointer'
+    head.addEventListener('click', () => {
       toggleEl(container)
     })
   }
 
-  box.append(tab, container)
+  box.append(head, container)
 
   return {
     box,
-    tab,
+    head,
     container
   }
 }

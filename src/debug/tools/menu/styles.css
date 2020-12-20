@@ -1,0 +1,27 @@
+.menu {
+  position: fixed;
+  top:0;
+  right: 0;
+  background-color: #f7f7f7;
+  padding: 5px;
+  border: thin solid #e4e4e4;
+}
+
+.menuTitle {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.checkableItem {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  color: #363636;
+  margin-bottom: 5px;
+}
+
+.checkableItem:last-child {
+  margin-bottom: 0;
+}

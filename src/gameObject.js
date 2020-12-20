@@ -6,6 +6,7 @@ export class GameObject {
   constructor (options = {}) {
     this.id = nanoid(10)
     this.tag = typeStringOrDefault(options.tag, null)
+    this.refKey = null // assigned when the gameObject is added to a parent
 
     this.enabled = typeBoolOrDefault(options.enabled, true)
     this.canDraw = typeBoolOrDefault(options.canDraw, true)
@@ -17,6 +18,12 @@ export class GameObject {
     this.parent = null
 
     this.drawIndex = 0
+  }
+
+  name () {
+    if (!this.parent) return `Root [${this.id}]`
+    if (this.refKey) return this.refKey
+    return `GameObject [${this.id}]`
   }
 
   _update (args) {
@@ -63,6 +70,7 @@ export class GameObject {
 
   destroy () {
     if (this.parent) {
+      this.refKey = null
       this.parent.removeChild(this)
     } else {
       console.warn(`Gameobject cannot destroy itself without a parent.`)
@@ -72,6 +80,7 @@ export class GameObject {
   addChild (gameObject, key) {
     const newKey = key || gameObject.id
     if (!this.childs[newKey]) {
+      if (key) gameObject.refKey = key
       gameObject.parent = this
       this.childs[newKey] = gameObject
     }

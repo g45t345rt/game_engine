@@ -1,6 +1,6 @@
-import { createSelectEl, newEl, setElValue, setElClass, setElRender, renderEl, setElPosition, emptyEl, hideEl } from '../../ui'
-import styles from '../styles.css'
-import { inspectorTab, checkableInspectorTab, windowEl } from '../controls'
+import { createSelectEl, newEl, setElValue, setElClass, setElRender, renderEl, emptyEl, hideEl } from '../../../ui'
+import styles from './styles.css'
+import { windowEl, checkableWindowTabEl } from '../../controls'
 
 function propertyEl (titleValue, propEl) {
   const box = newEl('div')
@@ -18,8 +18,9 @@ function propertyEl (titleValue, propEl) {
 function setGameObjectTab (box, gameObject) {
   emptyEl(box)
 
-  // gameObject tab
-  const goTabEl = inspectorTab({ title: 'GameObject' })
+  const gameObjectTab = checkableWindowTabEl()
+  setElValue(gameObjectTab.title, gameObject.name())
+  setElRender(gameObjectTab.checkbox, () => gameObject.enabled)
 
   // select childs
   const select = createSelectEl({
@@ -57,9 +58,9 @@ function setGameObjectTab (box, gameObject) {
 
   const tagBox = propertyEl('tag', tag)
 
-  goTabEl.container.append(parentInput, selectPropEl, idBox, tagBox)
+  gameObjectTab.container.append(parentInput, selectPropEl, idBox, tagBox)
 
-  box.append(goTabEl.box)
+  box.append(gameObjectTab.box)
   //this.elements = { ...this.elements, id, tag, select }
 
   setComponentTabs(box, gameObject)
@@ -69,26 +70,28 @@ function setComponentTabs (box, gameObject) {
   const { components } = gameObject
   Object.keys(components).forEach((key) => {
     const component = components[key]
- 
-    const tab = checkableInspectorTab({ title: key })
-    setElRender(tab.checkbox, () => component.enabled)
+
+    const componentTab = checkableWindowTabEl()
+    setElValue(componentTab.title, key)
+    setElRender(componentTab.checkbox, () => component.enabled)
 
     if (component.inspector) {
       const { container } = component.inspector()
-      tab.container.append(container)
+      componentTab.container.append(container)
     } else {
       const noDefinition = newEl('div')
       setElValue(noDefinition, `No definition for this component.`)
       setElClass(noDefinition, styles.noDefinition)
-      tab.container.append(noDefinition)
+      componentTab.container.append(noDefinition)
     }
 
-    box.append(tab.box)
+    box.append(componentTab.box)
   })
 }
 
 export default function createInspector (gameRoot) {
-  const inspector = windowEl({ title: 'Inspector' })
+  const inspector = windowEl('inspector')
+  setElValue(inspector.windowTab.title, 'Inspector')
 
   // total gameobjects
   const totalGameObjects = newEl('div')
@@ -109,12 +112,14 @@ export default function createInspector (gameRoot) {
 
   const toggleInputPropEl = propertyEl('Game loop', toggleInput)
 
-  inspector.mainTab.container.append(totalGoBox, toggleInputPropEl)
+  inspector.windowTab.container.append(totalGoBox, toggleInputPropEl)
 
   const gameObjectBox = newEl('div')
 
   inspector.container.append(gameObjectBox)
   setGameObjectTab(gameObjectBox, gameRoot)
+
+  inspector.setGameObject = (go) => setGameObjectTab(gameObjectBox, go)
 
   document.body.append(inspector.box)
 
