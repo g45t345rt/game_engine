@@ -37,7 +37,7 @@ export function dividerEl () {
   return el
 }
 
-export function mouseMoveEditEl (el, { onChange } = {}) {
+export function mouseMoveEditEl (el, { onChange, incValue } = {}) {
   const lastCursor = document.body.style.cursor
   let mouseDown = false
   let startX = 0
@@ -45,7 +45,9 @@ export function mouseMoveEditEl (el, { onChange } = {}) {
 
   document.addEventListener('mousemove', (e) => {
     if (mouseDown) {
-      const newValue = startValue + (e.clientX - startX)
+      let increment = e.clientX - startX
+      if (incValue) increment = incValue(increment)
+      const newValue = startValue + increment
       setElValue(el, newValue)
       if (typeof onChange === 'function') onChange(newValue)
     }
@@ -72,8 +74,8 @@ export function mouseMoveEditEl (el, { onChange } = {}) {
   })
 }
 
-export function editableEl (el, { onChange, changeOnEveryInput = true, type = 'number' }) {
-  mouseMoveEditEl(el, { onChange })
+export function editableEl (el, { onChange, incValue, changeOnEveryInput = true, type = 'number' }) {
+  mouseMoveEditEl(el, { onChange, incValue })
   const editInput = newEl('input')
   editInput.type = type
   editInput.style.width = '70px'

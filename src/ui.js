@@ -286,3 +286,45 @@ export function createTableEl ({ rows, columns, header = true }) {
     table
   }
 }
+
+export function createTreeViewEl ({ root, getChilds, getText, onSelect, indent = 10 }) {
+  function buildTreeView (item, parentEl, deep) {
+    const childs = getChilds(item)
+    if (!parentEl) parentEl = newEl('div')
+
+    if (childs.length > 0) {
+      const containerEl = newEl('div')
+      childs.forEach((child) => {
+        const childEl = newEl('div')
+        if (deep > 0) childEl.style.paddingLeft = `${deep * indent}px`
+
+        const valueEl = newEl('div')
+        setElValue(valueEl, getText(child))
+        childEl.append(valueEl)
+
+        // collapse on doubleclick
+        valueEl.addEventListener('dblclick', () => {
+          const nextEl = valueEl.parentNode.children[1]
+          if (nextEl) toggleEl(nextEl)
+        })
+
+        // select on click
+        valueEl.addEventListener('click', () => {
+          if (onSelect) onSelect(child)
+        })
+
+        containerEl.append(childEl)
+        buildTreeView(child, childEl, deep + 1)
+      })
+
+      parentEl.append(containerEl)
+    }
+
+    return parentEl
+  }
+
+  const containerEl = newEl('div')
+  const treeView = buildTreeView(root, null, 0)
+  containerEl.append(treeView)
+  return containerEl
+}

@@ -96,18 +96,18 @@ export class Transform extends Component {
     rotationNext.parentNode.removeChild(rotationNext)
     rotation.colSpan = '2'
     setElRender(rotation, () => this.r)
-    editableEl(rotation, { onChange: (v) => this.r = v })
+    editableEl(rotation, { onChange: (v) => this.r = v, incValue: (v) => v / 100 })
 
     // Scale
     setElValue(tr[3][0], 'Scale')
 
     const scaleX = tr[3][1]
     setElRender(scaleX, () => this.sx)
-    editableEl(scaleX, { onChange: (v) => this.sx = v })
+    editableEl(scaleX, { onChange: (v) => this.sx = v, incValue: (v) => v / 10 })
 
     const scaleY = tr[3][2]
     setElRender(scaleY, () => this.sy)
-    editableEl(scaleY, { onChange: (v) => this.sy = v })
+    editableEl(scaleY, { onChange: (v) => this.sy = v, incValue: (v) => v / 10 })
 
     // Origins
     const { rows: or, table: ot } = createTableEl({ rows: 4, columns: 3 })
