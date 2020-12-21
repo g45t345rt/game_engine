@@ -1,33 +1,19 @@
 import { typeNumberOrDefault } from '../typeCheck'
-import Component from '../component'
 import Transform from './transform'
+import Component from '../component'
 
 export class DrawFPS extends Component {
   constructor (options) {
     super(options)
     this.padding = typeNumberOrDefault(options.padding, 5)
-    this.fps = 0
-    this.frames = 0
-    this.elapsed = 0
   }
 
   init () {
     this.requiredComponent(Transform)
   }
 
-  update ({ deltaTime }) {
-    if (this.elapsed > 1000) {
-      this.elapsed = 0
-      this.fps = this.frames
-      this.frames = 0
-    }
-
-    this.frames++
-    this.elapsed += deltaTime
-  }
-
-  draw ({ ctx }) {
-    const text = `${this.fps} FPS`
+  draw ({ ctx, fps }) {
+    const text = `${fps} FPS`
 
     ctx.font = 'bold 14px arial'
 

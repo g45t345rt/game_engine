@@ -47,7 +47,7 @@ game.addChild(world, 'world')
 const updater = new Updater({ root: game })
 const renderer = new Renderer({ root: game })
 
-const dev = false // mocking
+const dev = true // mocking
 if (dev) useDebugTools(renderer)
 
 document.body.append(renderer.canvas)

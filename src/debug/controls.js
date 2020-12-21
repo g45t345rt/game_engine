@@ -144,7 +144,7 @@ export function windowEl (key) {
   setElClass(draggable.box, styles.window)
   setElClass(draggable.dragArea, styles.dragArea)
 
-  const windowTab = windowTabEl()
+  const windowTab = windowTabEl({ canToggle: false })
   draggable.windowTab = windowTab
 
   draggable.container.append(windowTab.box)

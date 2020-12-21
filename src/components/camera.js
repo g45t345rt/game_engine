@@ -1,6 +1,8 @@
 import { typeObject } from '../typeCheck'
 import Component from '../component'
 import Rect from './rect'
+import { newEl, setElValue } from '../ui'
+import { propertyEl } from '../debug/tools/inspector'
 
 export class Camera extends Component {
   constructor (options) {
@@ -23,6 +25,20 @@ export class Camera extends Component {
     ctx.clip()
 
     this.render._draw({ ...args, forceDraw: true })
+  }
+
+  inspector () {
+    const container = newEl('div')
+
+    const goEl = newEl('div')
+    setElValue(goEl, this.render.name())
+    
+    const goPropertyEl = propertyEl('Rendering', goEl)
+
+    container.append(goPropertyEl)
+    return {
+      container
+    }
   }
 }
 

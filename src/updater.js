@@ -1,4 +1,5 @@
-import { typeNumberOrDefault, typeObject, typeString, typeStringOrDefault } from './typeCheck'
+import FpsCounter from './fpsCounter'
+import { typeNumberOrDefault, typeObject, typeStringOrDefault } from './typeCheck'
 
 export class Updater extends EventTarget {
   #lastUpdate = 0
@@ -10,6 +11,7 @@ export class Updater extends EventTarget {
     this.root = typeObject(options.root)
     this.funcName = typeStringOrDefault(options.funcName, '_update')
     this.ups = typeNumberOrDefault(options.ups || 60) // update per seconds
+    this.fpsCounter = new FpsCounter()
   }
 
   start () {
@@ -38,6 +40,7 @@ export class Updater extends EventTarget {
   }
 
   #step (args) {
+    this.fpsCounter.update(args.deltaTime)
     this.root[this.funcName](args)
     this.dispatchEvent(new Event('update', args))
     this.#lastUpdate = args.timestamp

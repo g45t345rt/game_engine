@@ -1,4 +1,5 @@
-import { typeBoolOrDefault, typeNumberOrDefault, typeObject } from "./typeCheck"
+import FpsCounter from './fpsCounter'
+import { typeBoolOrDefault, typeNumberOrDefault, typeObject } from './typeCheck'
 
 export class Renderer extends EventTarget {
   #lastRender = 0
@@ -11,6 +12,8 @@ export class Renderer extends EventTarget {
     this.canvas = document.createElement('canvas')
     this.canvas.style.display = 'block' // fix overflow -- canvas use display: inline
     this.ctx = this.canvas.getContext('2d')
+
+    this.fpsCounter = new FpsCounter()
 
     this.width = typeNumberOrDefault(options.w, window.innerWidth)
     this.height = typeNumberOrDefault(options.h, window.innerHeight)
@@ -45,7 +48,9 @@ export class Renderer extends EventTarget {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     const deltaTime = timestamp - this.#lastRender
-    const args = { ctx, timestamp, deltaTime }
+    this.fpsCounter.update(deltaTime)
+
+    const args = { ctx, timestamp, deltaTime, fps: this.fpsCounter.fps }
     this.root._draw(args)
     this.dispatchEvent(new Event('render', args))
 

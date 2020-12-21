@@ -2,7 +2,7 @@ import { createSelectEl, newEl, setElValue, setElClass, setElRender, renderEl, e
 import styles from './styles.css'
 import { windowEl, checkableWindowTabEl } from '../../controls'
 
-function propertyEl (titleValue, propEl) {
+export function propertyEl (titleValue, propEl) {
   const box = newEl('div')
   setElClass(box, styles.property)
 
@@ -92,27 +92,6 @@ function setComponentTabs (box, gameObject) {
 export default function createInspector (gameRoot) {
   const inspector = windowEl('inspector')
   setElValue(inspector.windowTab.title, 'Inspector')
-
-  // total gameobjects
-  const totalGameObjects = newEl('div')
-  setElRender(totalGameObjects, () => gameRoot.findChilds().length)
-  const totalGoBox = propertyEl('Total gameobjects', totalGameObjects)
-
-  // toggle play/stop loop
-  const toggleInput = newEl('input')
-  setElRender(toggleInput, () => {
-    return gameRoot.canUpdate ? 'stop' : 'play'
-  })
-  toggleInput.type = 'button'
-  toggleInput.addEventListener('click', () => {
-    const { canUpdate } = gameRoot
-    gameRoot.canUpdate = !canUpdate
-    renderEl(toggleInput)
-  })
-
-  const toggleInputPropEl = propertyEl('Game loop', toggleInput)
-
-  inspector.windowTab.container.append(totalGoBox, toggleInputPropEl)
 
   const gameObjectBox = newEl('div')
 
