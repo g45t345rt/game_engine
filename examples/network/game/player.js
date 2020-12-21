@@ -1,9 +1,32 @@
 import { Component, components, Input } from 'gemer'
-import { editableEl } from '../../src/debug/controls'
-import { createTableEl, newEl, setElValue, setElRender } from '../../src/ui'
+
 const { Rect, Transform } = components
 
-export class Box extends Component {
+// Preset
+export function newPlayer (options = {}) {
+  const { x, y } = options
+
+  const gameObject = new GameObject()
+  gameObject.addComponent(Transform, { x, y })
+  gameObject.addComponent(Rect, { w: 50, h: 50 })
+  gameObject.addComponent(Player)
+
+  return gameObject
+}
+
+export class NetworkPlayer extends Player {
+  onData (data) {
+    const { x, y } = data
+    this.transform.x = x
+    this.transform.y = y
+  }
+
+  intrapolate () {
+    
+  }
+}
+
+export default class Player extends Component {
   constructor (options) {
     super(options)
 
@@ -38,23 +61,4 @@ export class Box extends Component {
     ctx.fillStyle = 'yellow'
     ctx.fillRect(0, 0, this.rect.w, this.rect.h)
   }
-
-  inspector () {
-    const container = newEl('div')
-
-    const { rows, table } = createTableEl({ rows: 2, columns: 2 })
-    setElValue(rows[0][1], 'Value')
-
-    setElValue(rows[1][0], 'Speed')
-    const speedEl = rows[1][1]
-    setElRender(speedEl, () => this.speed)
-    editableEl(speedEl, { onChange: (v) => this.speed = v })
-    container.append(table)
-
-    return {
-      container
-    }
-  }
 }
-
-export default Box

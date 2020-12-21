@@ -1,6 +1,7 @@
 import 'normalize.css'
 
 import { GameObject, Renderer, components, useDebugTools } from 'gemer'
+import { Updater } from '../../src'
 
 //import { Transform, Rect, Grid, Camera, DrawFPS } from 'gemer/components'
 const { Transform, Rect, Grid, Camera, DrawFPS } = components
@@ -43,10 +44,14 @@ game.addChild(mainCamera, 'mainCamera')
 game.addChild(fps, 'fps')
 game.addChild(world, 'world')
 
-const renderer = new Renderer()
-renderer.render(game)
+const updater = new Updater({ root: game })
+const renderer = new Renderer({ root: game })
 
-const dev = true // mocking
+const dev = false // mocking
 if (dev) useDebugTools(renderer)
 
+document.body.append(renderer.canvas)
+
+renderer.start()
+updater.start()
 

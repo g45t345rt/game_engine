@@ -26,7 +26,10 @@
     "build": "microbundle",
     "box_move": "parcel ./examples/box_move/index.html",
     "single_camera": "parcel ./examples/single_camera/index.html",
-    "multiple_camera": "parcel ./examples/multiple_camera/index.html"
+    "updater": "parcel ./examples/updater/index.html",
+    "network_client": "parcel ./examples/network/client/index.html",
+    "network_server": "parcel ./examples/network/server/index.js --target=node",
+    "network_server_node": "node ./dist/index.js"
   },
   "author": "",
   "license": "ISC",
